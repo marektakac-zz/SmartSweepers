@@ -3,7 +3,9 @@
 
 //these hold the geometry of the sweepers and the mines
 const int	 NumSweeperVerts = 16;
-const SPoint sweeper[NumSweeperVerts] = {SPoint(-1, -1),
+const SPoint sweeper[NumSweeperVerts] = 
+{
+	SPoint(-1, -1),
 	SPoint(-1, 1),
 	SPoint(-0.5, 1),
 	SPoint(-0.5, -1),
@@ -21,7 +23,8 @@ const SPoint sweeper[NumSweeperVerts] = {SPoint(-1, -1),
 	SPoint(-0.25, 1.75),
 	SPoint(0.25, 1.75),
 	SPoint(0.25, 0.5),
-	SPoint(0.5, 0.5)};
+	SPoint(0.5, 0.5)
+};
 
 
 

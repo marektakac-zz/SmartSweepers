@@ -16,32 +16,30 @@ namespace SmartSweepers2
         #region Private Variables
 
         /// <summary>The num sweeper verts</summary>
-        private const int NumSweeperVerts = 3;//16;
+        private const int NumSweeperVerts = 16;
 
         /// <summary>The sweeper</summary>
         private List<System.Drawing.Point> sweeper = new List<System.Drawing.Point>
         { 
-            new System.Drawing.Point(-1, -1),
-	        new System.Drawing.Point(-1, 1),
-            new System.Drawing.Point(-1, 0)
-            //,
-            //new System.Drawing.Point(-0.5, 1),
-            //new System.Drawing.Point(-0.5, -1),
+            new System.Drawing.Point(-4, -4),
+            new System.Drawing.Point(-4, 4),
+	        new System.Drawing.Point(-2, 4),
+            new System.Drawing.Point(-2, -4),
+            
+            new System.Drawing.Point(2, -4),
+            new System.Drawing.Point(4, -4),
+            new System.Drawing.Point(4, 4),
+            new System.Drawing.Point(2, 4),
 
-            //new System.Drawing.Point(0.5, -1),
-            //new System.Drawing.Point(1, -1),
-            //new System.Drawing.Point(1, 1),
-            //new System.Drawing.Point(0.5, 1),
+            new System.Drawing.Point(-2, -2),
+            new System.Drawing.Point(2, -2),
 
-            //new System.Drawing.Point(-0.5, -0.5),
-            //new System.Drawing.Point(0.5, -0.5),
-
-            //new System.Drawing.Point(-0.5, 0.5),
-            //new System.Drawing.Point(-0.25, 0.5),
-            //new System.Drawing.Point(-0.25, 1.75),
-            //new System.Drawing.Point(0.25, 1.75),
-            //new System.Drawing.Point(0.25, 0.5),
-            //new System.Drawing.Point(0.5, 0.5)
+            new System.Drawing.Point(-2, 2),
+            new System.Drawing.Point(-1, 2),
+            new System.Drawing.Point(-1, 7),
+            new System.Drawing.Point(1, 7),
+            new System.Drawing.Point(1, 2),
+            new System.Drawing.Point(2, 2)
         };
 
         /// <summary>The num mine verts</summary>
@@ -99,7 +97,7 @@ namespace SmartSweepers2
         private Pen greenPen;
 
         /// <summary>The font</summary>
-        private Font font = new Font(FontFamily.GenericSansSerif, 1, FontStyle.Regular);
+        private Font font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular);
 
         /// <summary>Toggles the speed at which the simulation runs.</summary>
         private bool fastRender;
@@ -185,8 +183,10 @@ namespace SmartSweepers2
         /// <param name="surface">The surface.</param>
         public void Render(Graphics surface)
         {
+            surface.Clear(SystemColors.Control);
+
             //render the stats
-            surface.DrawString(string.Format("Generation: {0}", generations), font, bluePen.Brush, 5, 0);
+            surface.DrawString(string.Format("Generation: {0}", generations), font, bluePen.Brush, 10, 10);
 
             int i = 0;
 
@@ -211,10 +211,8 @@ namespace SmartSweepers2
                 }
 
                 //render the sweepers
-                for (i = 0; i < sweepersCount; i++)
+                for (i = 0; i < 1/*sweepersCount*/; i++)
                 {
-                    int vert = 0;
-
                     var pen = bluePen;
 
                     if (i == Params.Instance.NumElite)
@@ -229,38 +227,16 @@ namespace SmartSweepers2
                     sweepers[i].WorldTransform(sweeperVB);
 
                     //draw the sweeper left track
-                    surface.DrawRectangle(
-                        pen,
-                        (float)sweeperVB[0].X,
-                        (float)sweeperVB[0].Y,
-                        (float)sweeperVB[2].X - (float)sweeperVB[0].X,
-                        (float)sweeperVB[2].Y - (float)sweeperVB[0].Y);
+                    surface.DrawLines(pen, sweeperVB.Take(4).ToArray());
+                    surface.DrawLine(pen, sweeperVB[0], sweeperVB[3]);
 
                     //draw the sweeper right track
-                    //surface.DrawRectangle(
-                    //    pen,
-                    //    (float)sweeperVB[4].X,
-                    //    (float)sweeperVB[4].Y,
-                    //    (float)sweeperVB[7].X - (float)sweeperVB[4].X,
-                    //    (float)sweeperVB[7].Y - (float)sweeperVB[4].Y);
+                    surface.DrawLines(pen, sweeperVB.Skip(4).Take(4).ToArray());
+                    surface.DrawLine(pen, sweeperVB[4], sweeperVB[7]);
 
-                    //surface.DrawRectangle(
-                    //    pen,
-                    //    (float)sweeperVB[8].X,
-                    //    (float)sweeperVB[8].Y,
-                    //    (float)sweeperVB[7].X - (float)sweeperVB[8].X,
-                    //    (float)sweeperVB[7].Y - (float)sweeperVB[8].Y);
+                    surface.DrawLine(pen, sweeperVB[8], sweeperVB[9]);
 
-                    //MoveToEx(surface, (int)sweeperVB[8].x, (int)sweeperVB[8].y, NULL);
-                    //LineTo(surface, (int)sweeperVB[9].x, (int)sweeperVB[9].y);
-
-                    //MoveToEx(surface, (int)sweeperVB[10].x, (int)sweeperVB[10].y, NULL);
-
-                    //for (vert=11; vert<16; ++vert)
-                    //{
-                    //    LineTo(surface, (int)sweeperVB[vert].x, (int)sweeperVB[vert].y);
-                    //}
-
+                    surface.DrawLines(pen, sweeperVB.Skip(10).ToArray());
                 }
             }
             else

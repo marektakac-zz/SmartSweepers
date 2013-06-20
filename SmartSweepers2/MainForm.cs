@@ -51,7 +51,7 @@ namespace SmartSweepers2
 
                 UpdatePictureBox();
 
-                //Thread.Sleep(100);
+                Thread.Sleep(100);
             }
         }
 
@@ -67,7 +67,10 @@ namespace SmartSweepers2
             }
             else
             {
-                controller.Render(pictureBox.CreateGraphics());
+                using (var graphics = pictureBox.CreateGraphics())
+                {
+                    controller.Render(graphics);
+                }
             }
         }
     }
