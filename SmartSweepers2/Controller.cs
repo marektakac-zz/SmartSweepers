@@ -226,6 +226,15 @@ namespace SmartSweepers2
                     //transform the vertex buffer
                     sweepers[i].WorldTransform(sweeperVB);
 
+                    var msg = string.Format("[{0:000} , {1:000}] {2:00} {3:000} [{4:000} , {5:000}]", 
+                        sweepers[i].Position().X,
+                        sweepers[i].Position().Y,
+                        sweepers[i].speed,
+                        sweepers[i].rotation,
+                        sweepers[i].lookAt.X,
+                        sweepers[i].lookAt.Y);
+                    surface.DrawString(msg, font, bluePen.Brush, 10, 380);
+
                     //draw the sweeper left track
                     surface.DrawLines(pen, sweeperVB.Take(4).ToArray());
                     surface.DrawLine(pen, sweeperVB[0], sweeperVB[3]);

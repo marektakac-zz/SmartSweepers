@@ -20,13 +20,13 @@ namespace SmartSweepers2
         private Vector position;
 
         /// <summary>Direction sweeper is facing.</summary>
-        private Vector lookAt;
+        public Vector lookAt;
 
         /// <summary>Its rotation (surprise surprise).</summary>
-        private double rotation;
+        public double rotation;
 
         /// <summary>The speed.</summary>
-        private double speed;
+        public double speed;
 
         /// <summary>To store output from the ANN.</summary>
         private double lTrack;
