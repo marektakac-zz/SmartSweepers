@@ -40,7 +40,7 @@ namespace SmartSweepers2
             return random.Next(0, 1) == 1 ? true : false;
         }
 
-        /// <summary>Returns a random double in the range -1 < n < 1.</summary>
+        /// <summary>Returns a random double in the range -1 &lt; n &lt; 1.</summary>
         /// <returns></returns>
         public static double RandomClamped()
         {

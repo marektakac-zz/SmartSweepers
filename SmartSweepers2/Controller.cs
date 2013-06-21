@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using SmartSweepers2.NN;
+using SmartSweepers2.AI;
 
 namespace SmartSweepers2
 {
@@ -64,7 +64,7 @@ namespace SmartSweepers2
         private List<Vector> mines = new List<Vector>();
 
         /// <summary>The Genetic algorithm.</summary>
-        private GenAlg genAlg;
+        private GeneticAlgorithm geneticAlgorithm;
 
         /// <summary>The count of sweepers.</summary>
         private int sweepersCount;
@@ -122,7 +122,6 @@ namespace SmartSweepers2
         public Controller()
         {
             sweepersCount = Params.Instance.NumSweepers;
-            genAlg = null;
             fastRender = false;
             ticks = 0;
             minesCount = Params.Instance.NumMines;
@@ -142,10 +141,10 @@ namespace SmartSweepers2
             weightsInNN = sweepers[0].GetNumberOfWeights();
 
             //initialize the Genetic Algorithm class
-            genAlg = new GenAlg(sweepersCount, Params.Instance.MutationRate, Params.Instance.CrossoverRate, weightsInNN);
+            geneticAlgorithm = new GeneticAlgorithm(sweepersCount, Params.Instance.MutationRate, Params.Instance.CrossoverRate, weightsInNN);
 
             //Get the weights from the GA and insert into the sweepers brains
-            population = genAlg.GetChromos();
+            population = geneticAlgorithm.Genomes.ToList();
 
             for (i = 0; i < sweepersCount; i++)
             {
@@ -226,7 +225,7 @@ namespace SmartSweepers2
                     //transform the vertex buffer
                     sweepers[i].WorldTransform(sweeperVB);
 
-                    var msg = string.Format("[{0:000} , {1:000}] {2:00} {3:000} [{4:000} , {5:000}]", 
+                    var msg = string.Format("[{0:F0} , {1:F0}] {2:F0} {3:F0} [{4:F0} , {5:F0}]", 
                         sweepers[i].Position().X,
                         sweepers[i].Position().Y,
                         sweepers[i].speed,
@@ -314,8 +313,8 @@ namespace SmartSweepers2
                 //Time to run the GA and update the sweepers with their new NNs
 
                 //update the stats to be used in our stat window
-                averageFitness.Add(genAlg.AverageFitness());
-                bestFitness.Add(genAlg.BestFitness());
+                averageFitness.Add(geneticAlgorithm.AverageFitness());
+                bestFitness.Add(geneticAlgorithm.BestFitness());
 
                 //increment the generation counter
                 ++generations;
@@ -324,7 +323,7 @@ namespace SmartSweepers2
                 ticks = 0;
 
                 //run the GA to create a new population
-                population = genAlg.Epoch(population);
+                population = geneticAlgorithm.Epoch(population);
 
                 //insert the new (hopefully)improved brains back into the sweepers
                 //and reset their positions etc
@@ -366,22 +365,21 @@ namespace SmartSweepers2
         /// <param name="surface">The surface.</param>
         private void PlotStats(Graphics surface)
         {
-            string s = string.Format("Best Fitness: {0}", genAlg.BestFitness());
+            string s = string.Format("Best Fitness: {0}", geneticAlgorithm.BestFitness());
             surface.DrawString(s, font, bluePen.Brush, 5, 20);
 
-            s = string.Format("Average Fitness: {0}",genAlg.AverageFitness());
+            s = string.Format("Average Fitness: {0}",geneticAlgorithm.AverageFitness());
             surface.DrawString(s, font, bluePen.Brush, 5, 40);
 
             //render the graph
             float HSlice = (float)clientWidth / (generations + 1);
-            float VSlice = (float)clientHeight / (((float)genAlg.BestFitness() + 1) * 2);
+            float VSlice = (float)clientHeight / (((float)geneticAlgorithm.BestFitness() + 1) * 2);
 
             //plot the graph for the best fitness
+            /*
             float x = 0;
-
             int i = 0;
 
-            /*
             MoveToEx(surface, 0, cyClient, NULL);
 
             for (i = 0; i < m_vecBestFitness.size(); ++i)

@@ -46,8 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller.cs" />
-    <Compile Include="NN\GenAlg.cs" />
-    <Compile Include="NN\Genome.cs" />
+    <Compile Include="AI\GeneticAlgorithm.cs" />
+    <Compile Include="AI\Genome.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -55,9 +55,9 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Minesweeper.cs" />
-    <Compile Include="NN\NeuralNet.cs" />
-    <Compile Include="NN\Neuron.cs" />
-    <Compile Include="NN\NeuronLayer.cs" />
+    <Compile Include="AI\NeuralNet.cs" />
+    <Compile Include="AI\Neuron.cs" />
+    <Compile Include="AI\NeuronLayer.cs" />
     <Compile Include="Params.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

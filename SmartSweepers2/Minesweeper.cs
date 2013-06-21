@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using SmartSweepers2.NN;
+using SmartSweepers2.AI;
 
 namespace SmartSweepers2
 {
