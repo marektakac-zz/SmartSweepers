@@ -50,6 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\GeneticAlgorithm.cs" />
+    <Compile Include="AI\Genome.cs" />
+    <Compile Include="AI\NeuralNet.cs" />
+    <Compile Include="AI\Neuron.cs" />
+    <Compile Include="AI\NeuronLayer.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="Minesweeper.cs" />
+    <Compile Include="Params.cs" />
     <Compile Include="Rendering\DeviceContext2D.cs" />
     <Compile Include="Rendering\DeviceSettings2D.cs" />
     <Compile Include="Rendering\DeviceContext10.cs" />
@@ -73,6 +81,7 @@
     <Compile Include="Rendering\UI\UserInterfaceRenderer.cs" />
     <Compile Include="Rendering\UI\UserInterfaceRenderer10.cs" />
     <Compile Include="Utility\Clock.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
