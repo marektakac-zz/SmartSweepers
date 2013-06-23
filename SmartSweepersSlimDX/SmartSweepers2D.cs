@@ -7,6 +7,7 @@ using System.Drawing;
 using SlimDX;
 using SlimDX.Direct2D;
 using SmartSweepersSlimDX.Rendering;
+using System.Diagnostics;
 
 namespace SmartSweepersSlimDX
 {
@@ -15,9 +16,7 @@ namespace SmartSweepersSlimDX
         private PathGeometry geometry;
         private SolidColorBrush brush;
 
-        /// <summary>
-        /// Disposes of object resources.
-        /// </summary>
+        /// <summary>Disposes of object resources.</summary>
         /// <param name="disposeManagedResources">If true, managed resources should be
         /// disposed of in addition to unmanaged resources.</param>
         protected override void Dispose(bool disposeManagedResources)
@@ -31,9 +30,7 @@ namespace SmartSweepersSlimDX
             base.Dispose(disposeManagedResources);
         }
 
-        /// <summary>
-        /// In a derived class, implements logic to initialize the sample.
-        /// </summary>
+        /// <summary>In a derived class, implements logic to initialize the instance.</summary>
         protected override void OnInitialize()
         {
             DeviceSettings2D settings = new DeviceSettings2D
@@ -76,9 +73,7 @@ namespace SmartSweepersSlimDX
             Context2D.RenderTarget.Clear(new Color4(0.3f, 0.3f, 0.3f));
         }
 
-        /// <summary>
-        /// In a derived class, implements logic to render the sample.
-        /// </summary>
+        /// <summary>In a derived class, implements logic to render the instance.</summary>
         protected override void OnRender()
         {
             Context2D.RenderTarget.FillGeometry(geometry, brush);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using SlimDX.DXGI;
@@ -277,6 +278,8 @@ namespace SmartSweepersSlimDX
             if (frameAccumulator >= 1.0f)
             {
                 framesPerSecond.Value = frameCount / frameAccumulator;
+
+                //Debug.WriteLine(string.Format("FPS: {0:0}", framesPerSecond.Value));
 
                 frameAccumulator = 0.0f;
                 frameCount = 0;
