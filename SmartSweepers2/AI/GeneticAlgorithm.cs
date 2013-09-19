@@ -134,10 +134,10 @@ namespace SmartSweepers2.AI
                 Genome dad = GetChromoRoulette();
 
                 //create some offspring via crossover
-                List<double> baby1 = new List<double>();
-                List<double> baby2 = new List<double>();
+                List<double> baby1 = null;
+                List<double> baby2 = null;
 
-                Crossover(mum.Weights, dad.Weights, baby1, baby2);
+                Crossover(mum.Weights, dad.Weights, out baby1, out baby2);
 
                 //now we mutate
                 Mutate(baby1);
@@ -177,16 +177,19 @@ namespace SmartSweepers2.AI
         /// <param name="dad">The dad.</param>
         /// <param name="girl">The girl.</param>
         /// <param name="boy">The boy.</param>
-        private void Crossover(IList<double> mum, IList<double> dad, IList<double> girl, IList<double> boy)
+        private void Crossover(IList<double> mum, IList<double> dad, out List<double> girl, out List<double> boy)
         {
             //just return parents as offspring dependent on the rate or if parents are the same
             if ((Utils.RandomDouble() > crossoverRate) || (mum == dad))
             {
-                girl = mum;
-                boy = dad;
+                girl = new List<double>(mum);
+                boy = new List<double>(dad);
 
                 return;
             }
+
+            girl = new List<double>();
+            boy = new List<double>();
 
             //determine a crossover point
             int crossoverPoint = Utils.RandomInt(0, chromoLength - 1);

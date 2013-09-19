@@ -210,7 +210,7 @@ namespace SmartSweepers2
                 }
 
                 //render the sweepers
-                for (i = 0; i < 1/*sweepersCount*/; i++)
+                for (i = 0; i < sweepersCount; i++)
                 {
                     var pen = bluePen;
 
@@ -225,14 +225,17 @@ namespace SmartSweepers2
                     //transform the vertex buffer
                     sweepers[i].WorldTransform(sweeperVB);
 
-                    var msg = string.Format("[{0:F0} , {1:F0}] {2:F0} {3:F0} [{4:F0} , {5:F0}]", 
-                        sweepers[i].Position().X,
-                        sweepers[i].Position().Y,
-                        sweepers[i].speed,
-                        sweepers[i].rotation,
-                        sweepers[i].lookAt.X,
-                        sweepers[i].lookAt.Y);
-                    surface.DrawString(msg, font, bluePen.Brush, 10, 380);
+                    if (i == 0)
+                    {
+                        var msg = string.Format("[{0:F0} , {1:F0}] {2:F0} {3:F0} [{4:F0} , {5:F0}]",
+                            sweepers[i].Position().X,
+                            sweepers[i].Position().Y,
+                            sweepers[i].speed,
+                            sweepers[i].rotation,
+                            sweepers[i].lookAt.X,
+                            sweepers[i].lookAt.Y);
+                        surface.DrawString(msg, font, bluePen.Brush, 10, 380);
+                    }
 
                     //draw the sweeper left track
                     surface.DrawLines(pen, sweeperVB.Take(4).ToArray());
@@ -309,12 +312,14 @@ namespace SmartSweepers2
             else
             {
                 //Another generation has been completed.
-
                 //Time to run the GA and update the sweepers with their new NNs
 
                 //update the stats to be used in our stat window
                 averageFitness.Add(geneticAlgorithm.AverageFitness());
                 bestFitness.Add(geneticAlgorithm.BestFitness());
+
+                //statistics to debug window
+                System.Diagnostics.Debug.WriteLine("Epoch {0} - Fitness Avg / Best: {1,8:N2} / {2,7:N}", generations, averageFitness[generations], bestFitness[generations]);
 
                 //increment the generation counter
                 ++generations;
