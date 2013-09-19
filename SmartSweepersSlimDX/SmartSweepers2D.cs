@@ -72,8 +72,8 @@ namespace SmartSweepersSlimDX
                 new System.Drawing.Point(4, 4),
                 new System.Drawing.Point(2, 4),
 
-                new System.Drawing.Point(-2, -2),
                 new System.Drawing.Point(2, -2),
+                new System.Drawing.Point(-2, -2),
 
                 new System.Drawing.Point(-2, 2),
                 new System.Drawing.Point(-1, 2),
@@ -121,7 +121,7 @@ namespace SmartSweepersSlimDX
             using (GeometrySink sink = body.Open())
             {
                 sink.BeginFigure(sweeperVB[8], FigureBegin.Filled);
-                sink.AddLines(sweeperVB.Skip(8).ToArray());
+                sink.AddLines(sweeperVB.Skip(7).ToArray());
                 sink.EndFigure(FigureEnd.Closed);
                 sink.Close();
             }
@@ -148,11 +148,12 @@ namespace SmartSweepersSlimDX
         protected override void OnRender()
         {
             //Context2D.RenderTarget.FillGeometry(triangle, brush);
-            
-            foreach (var geometry in sweeperGG.GetSourceGeometry())
-            {
-                Context2D.RenderTarget.FillGeometry(geometry, brush);
-            }
+
+            Context2D.RenderTarget.FillGeometry(sweeperGG.GetSourceGeometry()[0], brush);
+            Context2D.RenderTarget.FillGeometry(sweeperGG.GetSourceGeometry()[1], brush);
+            Context2D.RenderTarget.FillGeometry(
+                sweeperGG.GetSourceGeometry()[2],
+                new SolidColorBrush(Context2D.RenderTarget, new Color4(0.7f, brushColor.Red, brushColor.Green, brushColor.Blue)));
         }
 
         /// <summary>
