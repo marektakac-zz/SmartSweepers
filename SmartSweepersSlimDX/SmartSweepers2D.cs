@@ -59,7 +59,7 @@ namespace SmartSweepersSlimDX
                 sink.Close();
             }
 
-            brush = new SolidColorBrush(Context2D.RenderTarget, new Color4(0.93f, 0.40f, 0.08f));
+            brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
         }
 
         /// <summary>
@@ -68,6 +68,8 @@ namespace SmartSweepersSlimDX
         /// </summary>
         protected override void OnRenderBegin()
         {
+            brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
+            
             Context2D.RenderTarget.BeginDraw();
             Context2D.RenderTarget.Transform = Matrix3x2.Identity;
             Context2D.RenderTarget.Clear(new Color4(0.3f, 0.3f, 0.3f));

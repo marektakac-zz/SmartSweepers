@@ -35,6 +35,8 @@ namespace SmartSweepersSlimDX
         private UserInterfaceRenderer userInterfaceRenderer;
         private bool isFullScreen = false;
 
+        protected SlimDX.Color4 brushColor = new SlimDX.Color4(0.93f, 0.40f, 0.08f);
+
         /// <summary>
         /// Gets the width of the renderable area of the window.
         /// </summary>
@@ -304,12 +306,12 @@ namespace SmartSweepersSlimDX
             {
                 OnRenderBegin();
                 OnRender();
-            
+
                 if (userInterfaceRenderer != null)
                 {
                     userInterfaceRenderer.Render(userInterface);
                 }
-                
+
                 OnRenderEnd();
             }
             catch (SlimDX.Direct3D9.Direct3D9Exception e)
@@ -339,7 +341,26 @@ namespace SmartSweepersSlimDX
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
-        private void HandleKeyDown(object sender, KeyEventArgs e) { }
+        private void HandleKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Right || e.KeyCode == Keys.Left)
+            {
+                int direction = e.KeyCode == Keys.Right ? 1 : -1;
+                float power = 30;
+
+                double r = brushColor.Red + (float)Utils.RandomDouble() / power * direction;
+                double g = brushColor.Green + (float)Utils.RandomDouble() / power * direction;
+                double b = brushColor.Blue + (float)Utils.RandomDouble() / power * direction;
+
+                Utils.Clamp(ref r, 0, 1);
+                Utils.Clamp(ref g, 0, 1);
+                Utils.Clamp(ref b, 0, 1);
+
+                brushColor = new SlimDX.Color4((float)r, (float)g, (float)b);
+
+                Debug.WriteLine(string.Format("New color: {0,6:N2} {1,4:N2} {2,4:N2}", brushColor.Red, brushColor.Green, brushColor.Blue));
+            }
+        }
 
         /// <summary>
         /// Handles a key up event.
