@@ -128,8 +128,11 @@ namespace SmartSweepersSlimDX
                 }
 
                 Update();
+
                 if (!formIsResizing)
+                {
                     Render();
+                }
             });
 
             OnResourceUnload();
@@ -331,7 +334,11 @@ namespace SmartSweepersSlimDX
         /// <param name="e">The <see cref="System.Windows.Forms.KeyEventArgs"/> instance containing the event data.</param>
         private void HandleKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Alt && e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Escape)
+            {
+                Quit();
+            }
+            else if (e.Alt && e.KeyCode == Keys.Enter)
             {
                 OnResourceUnload();
 
