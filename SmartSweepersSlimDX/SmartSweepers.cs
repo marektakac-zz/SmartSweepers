@@ -15,18 +15,19 @@ namespace SmartSweepersSlimDX
     /// <summary>
     /// Implements core application logic of a SlimDX.
     /// </summary>
-    class SmartSweepers : IDisposable
+    internal class SmartSweepers : IDisposable
     {
         private const int WINDOW_WIDTH = 800;
         private const int WINDOW_HEIGHT = 600;
         private const string TITLE = "Smart Sweepers";
 
-        private bool disposed = false;
         private readonly Clock clock = new Clock();
         private readonly Bindable<float> framesPerSecond = new Bindable<float>();
+
+        private bool disposed = false;
         private IDisposable apiContext;
         private FormWindowState currentFormWindowState;
-        private Form _form;
+        private Form form;
         private float frameAccumulator;
         private int frameCount;
         private bool deviceLost = false;
@@ -83,28 +84,28 @@ namespace SmartSweepersSlimDX
         /// <summary>Runs this instance.</summary>
         public void Run()
         {
-            _form = CreateForm();
+            form = CreateForm();
 
-            currentFormWindowState = _form.WindowState;
+            currentFormWindowState = form.WindowState;
 
             bool isFormClosed = false;
             bool formIsResizing = false;
 
-            _form.MouseClick += HandleMouseClick;
-            _form.KeyDown += HandleKeyDown;
-            _form.KeyUp += HandleKeyUp;
-            _form.Closed += (o, args) => { isFormClosed = true; };
-            _form.Resize += (o, args) =>
+            form.MouseClick += HandleMouseClick;
+            form.KeyDown += HandleKeyDown;
+            form.KeyUp += HandleKeyUp;
+            form.Closed += (o, args) => { isFormClosed = true; };
+            form.Resize += (o, args) =>
             {
-                if (_form.WindowState != currentFormWindowState)
+                if (form.WindowState != currentFormWindowState)
                 {
                     HandleResize(o, args);
                 }
 
-                currentFormWindowState = _form.WindowState;
+                currentFormWindowState = form.WindowState;
             };
-            _form.ResizeBegin += (o, args) => { formIsResizing = true; };
-            _form.ResizeEnd += (o, args) =>
+            form.ResizeBegin += (o, args) => { formIsResizing = true; };
+            form.ResizeEnd += (o, args) =>
             {
                 formIsResizing = false;
                 HandleResize(o, args);
@@ -120,7 +121,7 @@ namespace SmartSweepersSlimDX
 
             clock.Start();
 
-            MessagePump.Run(_form, () =>
+            MessagePump.Run(form, () =>
             {
                 if (isFormClosed)
                 {
@@ -164,13 +165,17 @@ namespace SmartSweepersSlimDX
                     }
 
                     apiContext.Dispose();
-                    _form.Dispose();
+                    form.Dispose();
                 }
 
                 disposed = true;
             }
         }
 
+        /// <summary>
+        /// Creates the form.
+        /// </summary>
+        /// <returns></returns>
         protected Form CreateForm()
         {
             return new RenderForm()
@@ -185,8 +190,14 @@ namespace SmartSweepersSlimDX
         /// </summary>
         protected virtual void OnInitialize() { }
 
+        /// <summary>
+        /// Called when resources are loaded.
+        /// </summary>
         protected virtual void OnResourceLoad() { }
 
+        /// <summary>
+        /// Called when resources are unloaded.
+        /// </summary>
         protected virtual void OnResourceUnload() { }
 
         /// <summary>
@@ -219,7 +230,7 @@ namespace SmartSweepersSlimDX
         /// <returns>The initialized device context.</returns>
         protected void InitializeDevice(DeviceSettings2D settings)
         {
-            var result = new DeviceContext2D(_form.Handle, settings);
+            var result = new DeviceContext2D(form.Handle, settings);
             //userInterfaceRenderer = new UserInterfaceRenderer9( result.Device, settings.Width, settings.Height );
             apiContext = result;
             Context2D = result;
@@ -233,7 +244,7 @@ namespace SmartSweepersSlimDX
         /// <returns>The initialized device context.</returns>
         protected void InitializeDevice(DeviceSettings10 settings)
         {
-            var result = new DeviceContext10(_form.Handle, settings);
+            var result = new DeviceContext10(form.Handle, settings);
             userInterfaceRenderer = new UserInterfaceRenderer10(result.Device, settings.Width, settings.Height);
             apiContext = result;
             Context10 = result;
@@ -242,7 +253,7 @@ namespace SmartSweepersSlimDX
         /// <summary>Quits this instance.</summary>
         protected void Quit()
         {
-            _form.Close();
+            form.Close();
         }
 
         /// <summary>Updates state.</summary>
@@ -278,6 +289,7 @@ namespace SmartSweepersSlimDX
 
             frameAccumulator += FrameDelta;
             ++frameCount;
+
             if (frameAccumulator >= 1.0f)
             {
                 framesPerSecond.Value = frameCount / frameAccumulator;
@@ -292,10 +304,12 @@ namespace SmartSweepersSlimDX
             {
                 OnRenderBegin();
                 OnRender();
+            
                 if (userInterfaceRenderer != null)
                 {
                     userInterfaceRenderer.Render(userInterface);
                 }
+                
                 OnRenderEnd();
             }
             catch (SlimDX.Direct3D9.Direct3D9Exception e)
@@ -378,7 +392,7 @@ namespace SmartSweepersSlimDX
 
         private void HandleResize(object sender, EventArgs e)
         {
-            if (_form.WindowState == FormWindowState.Minimized)
+            if (form.WindowState == FormWindowState.Minimized)
             {
                 return;
             }
@@ -404,8 +418,7 @@ namespace SmartSweepersSlimDX
 
                 Context10.SwapChain.ResizeBuffers(1, WindowWidth, WindowHeight, Context10.SwapChain.Description.ModeDescription.Format, Context10.SwapChain.Description.Flags);
 
-
-                userInterfaceRenderer = new UserInterfaceRenderer10(Context10.Device, _form.ClientSize.Width, _form.ClientSize.Height);
+                userInterfaceRenderer = new UserInterfaceRenderer10(Context10.Device, form.ClientSize.Width, form.ClientSize.Height);
             }
 
             OnResourceLoad();

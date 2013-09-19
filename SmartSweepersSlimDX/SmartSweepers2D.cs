@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace SmartSweepersSlimDX
 {
-    class SmartSweepers2D : SmartSweepers
+    internal class SmartSweepers2D : SmartSweepers
     {
         private PathGeometry geometry;
         private SolidColorBrush brush;
