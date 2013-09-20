@@ -188,7 +188,7 @@ namespace SmartSweepersSlimDX.AI
             boy = new List<double>();
 
             //determine a crossover point
-            int crossoverPoint = Utils.RandomInt(0, chromoLength - 1);
+            int crossoverPoint = Utils.RandomInt(chromoLength - 1);
 
             //create the offspring
             for (int i = 0; i < crossoverPoint; ++i)

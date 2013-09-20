@@ -14,7 +14,7 @@ namespace SmartSweepersSlimDX
     internal class SmartSweepers2D : SmartSweepers
     {
         private PathGeometry triangle;
-        private GeometryGroup sweeperGG;
+        private SweeperDraw sweeper;
         private SolidColorBrush brush;
 
         /// <summary>Disposes of object resources.</summary>
@@ -25,7 +25,7 @@ namespace SmartSweepersSlimDX
             if (disposeManagedResources)
             {
                 brush.Dispose();
-                triangle.Dispose();
+                //triangle.Dispose();
             }
 
             base.Dispose(disposeManagedResources);
@@ -42,6 +42,7 @@ namespace SmartSweepersSlimDX
 
             InitializeDevice(settings);
 
+            /*
             triangle = new PathGeometry(Context2D.RenderTarget.Factory);
 
             using (GeometrySink sink = triangle.Open())
@@ -59,74 +60,9 @@ namespace SmartSweepersSlimDX
                 // some other IDisposable() objects.
                 sink.Close();
             }
+            */
 
-            List<System.Drawing.Point> sweeper = new List<System.Drawing.Point>
-            { 
-                new System.Drawing.Point(-4, -4),
-                new System.Drawing.Point(-4, 4),
-	            new System.Drawing.Point(-2, 4),
-                new System.Drawing.Point(-2, -4),
-            
-                new System.Drawing.Point(2, -4),
-                new System.Drawing.Point(4, -4),
-                new System.Drawing.Point(4, 4),
-                new System.Drawing.Point(2, 4),
-
-                new System.Drawing.Point(2, -2),
-                new System.Drawing.Point(-2, -2),
-
-                new System.Drawing.Point(-2, 2),
-                new System.Drawing.Point(-1, 2),
-                new System.Drawing.Point(-1, 7),
-                new System.Drawing.Point(1, 7),
-                new System.Drawing.Point(1, 2),
-                new System.Drawing.Point(2, 2)
-            };
-
-            float scale = 10;
-            float rotation = 0;
-            float posX = 10;
-            float posY = 10;
-
-            System.Drawing.Drawing2D.Matrix matTransform = new System.Drawing.Drawing2D.Matrix();
-            matTransform.Scale(scale, scale);
-            matTransform.Rotate(rotation);
-            matTransform.Translate(posX, posY);
-
-            var sweeperTrans = sweeper.ToArray();
-            matTransform.TransformPoints(sweeperTrans);
-            var sweeperVB = sweeperTrans.Select(p => new PointF(p.X, p.Y)).ToArray();
-
-            var leftTrack = new PathGeometry(Context2D.RenderTarget.Factory);
-            using (GeometrySink sink = leftTrack.Open())
-            {
-                sink.BeginFigure(sweeperVB[0], FigureBegin.Filled);
-                sink.AddLines(sweeperVB.Take(4).ToArray());
-                sink.AddLine(sweeperVB[0]);
-                sink.EndFigure(FigureEnd.Closed);
-                sink.Close();
-            }
-
-            var rightTrack = new PathGeometry(Context2D.RenderTarget.Factory);
-            using (GeometrySink sink = rightTrack.Open())
-            {
-                sink.BeginFigure(sweeperVB[4], FigureBegin.Filled);
-                sink.AddLines(sweeperVB.Skip(4).Take(4).ToArray());
-                sink.AddLine(sweeperVB[4]);
-                sink.EndFigure(FigureEnd.Closed);
-                sink.Close();
-            }
-
-            var body = new PathGeometry(Context2D.RenderTarget.Factory);
-            using (GeometrySink sink = body.Open())
-            {
-                sink.BeginFigure(sweeperVB[8], FigureBegin.Filled);
-                sink.AddLines(sweeperVB.Skip(7).ToArray());
-                sink.EndFigure(FigureEnd.Closed);
-                sink.Close();
-            }
-
-            sweeperGG = new GeometryGroup(Context2D.RenderTarget.Factory, FillMode.Alternate, new[] { leftTrack, rightTrack, body });
+            sweeper = new SweeperDraw(Context2D);
 
             brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
         }
@@ -139,6 +75,8 @@ namespace SmartSweepersSlimDX
         {
             brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
 
+            sweeper.Update();
+
             Context2D.RenderTarget.BeginDraw();
             Context2D.RenderTarget.Transform = Matrix3x2.Identity;
             Context2D.RenderTarget.Clear(new Color4(0.3f, 0.3f, 0.3f));
@@ -149,11 +87,9 @@ namespace SmartSweepersSlimDX
         {
             //Context2D.RenderTarget.FillGeometry(triangle, brush);
 
-            Context2D.RenderTarget.FillGeometry(sweeperGG.GetSourceGeometry()[0], brush);
-            Context2D.RenderTarget.FillGeometry(sweeperGG.GetSourceGeometry()[1], brush);
-            Context2D.RenderTarget.FillGeometry(
-                sweeperGG.GetSourceGeometry()[2],
-                new SolidColorBrush(Context2D.RenderTarget, new Color4(0.7f, brushColor.Red, brushColor.Green, brushColor.Blue)));
+            Context2D.RenderTarget.FillGeometry(sweeper.LeftTrack, brush);
+            Context2D.RenderTarget.FillGeometry(sweeper.RightTrack, brush);
+            Context2D.RenderTarget.FillGeometry(sweeper.Body, new SolidColorBrush(Context2D.RenderTarget, new Color4(0.7f, brushColor.Red, brushColor.Green, brushColor.Blue)));
         }
 
         /// <summary>
