@@ -40,6 +40,7 @@ namespace SmartSweepersSlimDX
         };
         private PointF[] vertices = null;
         private DeviceContext2D context2D;
+        private Guid id;
 
         public PathGeometry LeftTrack
         {
@@ -112,15 +113,21 @@ namespace SmartSweepersSlimDX
         public SweeperDraw(DeviceContext2D context2D)
         {
             this.context2D = context2D;
+
+            id = Guid.NewGuid();
+
+            posX = Utils.RandomInt(400);
+            posY = Utils.RandomInt(400);
+            rotation = Utils.RandomInt(360);
+
+            Debug.WriteLine(string.Format("Sweeper initializes with params rot: {0} pos: [{1},{2}]", rotation, posX, posY));
         }
 
         public void Update()
         {
-            rotation += (Utils.RandomInt(3) - 1) * (int)(Utils.RandomDouble() * 2);
-            posX += (Utils.RandomInt(3) - 1) * (int)(Utils.RandomDouble() * 1);
-            posY += (Utils.RandomInt(3) - 1) * (int)(Utils.RandomDouble() * 1);
-
-            Debug.WriteLine(string.Format("rot: {0} pos: [{1},{2}]", rotation, posX, posY));
+            rotation += (Utils.RandomInt(3) - 1) * (int)(Utils.RandomDouble() * 3);
+            posX += (Utils.RandomInt(3) - 1) * (int)(Utils.RandomDouble() * 2);
+            posY += (Utils.RandomInt(3) - 1) * (int)(Utils.RandomDouble() * 2);
 
             while (rotation < 0) { rotation += 360; }
             while (rotation > 360) { rotation -= 360; }
@@ -128,9 +135,9 @@ namespace SmartSweepersSlimDX
             Utils.Clamp(ref posY, 10, 400);
 
             System.Drawing.Drawing2D.Matrix matTransform = new System.Drawing.Drawing2D.Matrix();
-            matTransform.Scale(scale, scale);
-            matTransform.Rotate(rotation);
-            matTransform.Translate(posX, posY);
+            matTransform.Scale(scale, scale, System.Drawing.Drawing2D.MatrixOrder.Append);
+            matTransform.Rotate(rotation, System.Drawing.Drawing2D.MatrixOrder.Append);
+            matTransform.Translate(posX, posY, System.Drawing.Drawing2D.MatrixOrder.Append);
 
             var temp = points.ToArray();
             matTransform.TransformPoints(temp);

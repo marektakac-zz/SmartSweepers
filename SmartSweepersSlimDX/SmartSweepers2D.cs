@@ -13,8 +13,7 @@ namespace SmartSweepersSlimDX
 {
     internal class SmartSweepers2D : SmartSweepers
     {
-        private PathGeometry triangle;
-        private SweeperDraw sweeper;
+        private IList<SweeperDraw> sweepers;
         private SolidColorBrush brush;
 
         /// <summary>Disposes of object resources.</summary>
@@ -25,7 +24,6 @@ namespace SmartSweepersSlimDX
             if (disposeManagedResources)
             {
                 brush.Dispose();
-                //triangle.Dispose();
             }
 
             base.Dispose(disposeManagedResources);
@@ -42,27 +40,12 @@ namespace SmartSweepersSlimDX
 
             InitializeDevice(settings);
 
-            /*
-            triangle = new PathGeometry(Context2D.RenderTarget.Factory);
+            sweepers = new List<SweeperDraw>();
 
-            using (GeometrySink sink = triangle.Open())
+            for (int idx = 0; idx < 10; idx++)
             {
-                PointF p0 = new PointF(0.50f * WindowWidth, 0.25f * WindowHeight);
-                PointF p1 = new PointF(0.75f * WindowWidth, 0.75f * WindowHeight);
-                PointF p2 = new PointF(0.25f * WindowWidth, 0.75f * WindowHeight);
-
-                sink.BeginFigure(p0, FigureBegin.Filled);
-                sink.AddLine(p1);
-                sink.AddLine(p2);
-                sink.EndFigure(FigureEnd.Closed);
-
-                // Note that Close() and Dispose() are not equivalent like they are for
-                // some other IDisposable() objects.
-                sink.Close();
+                sweepers.Add(new SweeperDraw(Context2D));
             }
-            */
-
-            sweeper = new SweeperDraw(Context2D);
 
             brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
         }
@@ -75,7 +58,10 @@ namespace SmartSweepersSlimDX
         {
             brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
 
-            sweeper.Update();
+            foreach (var sweeper in sweepers)
+            {
+                sweeper.Update();
+            }
 
             Context2D.RenderTarget.BeginDraw();
             Context2D.RenderTarget.Transform = Matrix3x2.Identity;
@@ -85,11 +71,12 @@ namespace SmartSweepersSlimDX
         /// <summary>In a derived class, implements logic to render the instance.</summary>
         protected override void OnRender()
         {
-            //Context2D.RenderTarget.FillGeometry(triangle, brush);
-
-            Context2D.RenderTarget.FillGeometry(sweeper.LeftTrack, brush);
-            Context2D.RenderTarget.FillGeometry(sweeper.RightTrack, brush);
-            Context2D.RenderTarget.FillGeometry(sweeper.Body, new SolidColorBrush(Context2D.RenderTarget, new Color4(0.7f, brushColor.Red, brushColor.Green, brushColor.Blue)));
+            foreach (var sweeper in sweepers)
+            {
+                Context2D.RenderTarget.FillGeometry(sweeper.LeftTrack, brush);
+                Context2D.RenderTarget.FillGeometry(sweeper.RightTrack, brush);
+                Context2D.RenderTarget.FillGeometry(sweeper.Body, new SolidColorBrush(Context2D.RenderTarget, new Color4(0.7f, brushColor.Red, brushColor.Green, brushColor.Blue)));
+            }
         }
 
         /// <summary>
