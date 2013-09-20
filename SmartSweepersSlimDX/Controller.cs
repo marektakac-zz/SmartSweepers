@@ -212,6 +212,8 @@ namespace SmartSweepersSlimDX
                     if (i == Params.Instance.NumElite)
                     {
                         brush = redBrush;
+
+                        System.Diagnostics.Debug.WriteLine(sweepers[i].rotation);
                     }
 
                     //grab the sweeper vertices
