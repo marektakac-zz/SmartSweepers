@@ -97,7 +97,6 @@ namespace SmartSweepersSlimDX
             inputs.Add(lookAt.X);
             inputs.Add(lookAt.Y);
 
-
             //update the brain and get feedback
             List<double> output = brain.Update(inputs);
 
@@ -143,9 +142,9 @@ namespace SmartSweepersSlimDX
         public void WorldTransform(System.Drawing.PointF[] sweeper)
         {
             var matTransform = new System.Drawing.Drawing2D.Matrix();
-            matTransform.Scale((float)scale, (float)scale);
-            matTransform.Rotate((float)rotation);
-            matTransform.Translate(position.X, position.Y);
+            matTransform.Scale((float)scale, (float)scale, MatrixOrder.Append);
+            matTransform.Rotate((float)rotation, MatrixOrder.Append);
+            matTransform.Translate(position.X, position.Y, MatrixOrder.Append);
             matTransform.TransformPoints(sweeper);
         }
 

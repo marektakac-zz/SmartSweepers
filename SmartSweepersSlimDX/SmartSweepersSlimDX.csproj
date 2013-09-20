@@ -69,7 +69,6 @@
     <Compile Include="Rendering\UI\IElementVisual.cs" />
     <Compile Include="Rendering\UI\Text.cs" />
     <Compile Include="SmartSweepers2D.cs" />
-    <Compile Include="SweeperDraw.cs" />
     <Compile Include="UI\Binding\Bindable.cs" />
     <Compile Include="UI\Binding\Binding.cs" />
     <Compile Include="UI\Binding\IBindable.cs" />

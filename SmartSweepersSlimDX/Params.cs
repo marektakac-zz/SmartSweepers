@@ -145,8 +145,8 @@ namespace SmartSweepersSlimDX
         /// <summary>Initializes a new instance of the <see cref="Params" /> class.</summary>
         private Params()
         {
-            WindowHeight = 400;
-            WindowWidth = 400;
+            WindowWidth = 800;
+            WindowHeight = 600;
 
             //LoadInParameters("params.ini");
 

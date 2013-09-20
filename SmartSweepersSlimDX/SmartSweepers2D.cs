@@ -13,8 +13,9 @@ namespace SmartSweepersSlimDX
 {
     internal class SmartSweepers2D : SmartSweepers
     {
-        private IList<SweeperDraw> sweepers;
+        //private IList<SweeperDraw> sweepers;
         private SolidColorBrush brush;
+        private Controller controller;
 
         /// <summary>Disposes of object resources.</summary>
         /// <param name="disposeManagedResources">If true, managed resources should be
@@ -40,12 +41,14 @@ namespace SmartSweepersSlimDX
 
             InitializeDevice(settings);
 
-            sweepers = new List<SweeperDraw>();
+            //sweepers = new List<SweeperDraw>();
 
-            for (int idx = 0; idx < 10; idx++)
-            {
-                sweepers.Add(new SweeperDraw(Context2D));
-            }
+            //for (int idx = 0; idx < 10; idx++)
+            //{
+            //    sweepers.Add(new SweeperDraw(Context2D));
+            //}
+
+            controller = new Controller(Context2D.RenderTarget);
 
             brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
         }
@@ -58,25 +61,29 @@ namespace SmartSweepersSlimDX
         {
             brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
 
-            foreach (var sweeper in sweepers)
-            {
-                sweeper.Update();
-            }
+            //foreach (var sweeper in sweepers)
+            //{
+            //    sweeper.Update();
+            //}
+
+            controller.Update();
 
             Context2D.RenderTarget.BeginDraw();
             Context2D.RenderTarget.Transform = Matrix3x2.Identity;
-            Context2D.RenderTarget.Clear(new Color4(0.3f, 0.3f, 0.3f));
+            Context2D.RenderTarget.Clear(new Color4(System.Drawing.Color.Black));
         }
 
         /// <summary>In a derived class, implements logic to render the instance.</summary>
         protected override void OnRender()
         {
-            foreach (var sweeper in sweepers)
-            {
-                Context2D.RenderTarget.FillGeometry(sweeper.LeftTrack, brush);
-                Context2D.RenderTarget.FillGeometry(sweeper.RightTrack, brush);
-                Context2D.RenderTarget.FillGeometry(sweeper.Body, new SolidColorBrush(Context2D.RenderTarget, new Color4(0.7f, brushColor.Red, brushColor.Green, brushColor.Blue)));
-            }
+            //foreach (var sweeper in sweepers)
+            //{
+            //    Context2D.RenderTarget.FillGeometry(sweeper.LeftTrack, brush);
+            //    Context2D.RenderTarget.FillGeometry(sweeper.RightTrack, brush);
+            //    Context2D.RenderTarget.FillGeometry(sweeper.Body, new SolidColorBrush(Context2D.RenderTarget, new Color4(0.7f, brushColor.Red, brushColor.Green, brushColor.Blue)));
+            //}
+
+            controller.Render();
         }
 
         /// <summary>

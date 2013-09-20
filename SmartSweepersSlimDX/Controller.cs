@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using SlimDX;
+using SlimDX.Direct2D;
+using SmartSweepersSlimDX.AI;
+using SmartSweepersSlimDX.Rendering;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using SlimDX;
-using SmartSweepersSlimDX.AI;
 
 namespace SmartSweepersSlimDX
 {
@@ -83,17 +84,14 @@ namespace SmartSweepersSlimDX
         /// <summary>Stores the best fitness per generation.</summary>
         private List<double> bestFitness = new List<double>();
 
-        /// <summary>The red pen.</summary>
-        private Pen redPen;
+        private Brush redBrush;
 
-        /// <summary>The blue pen.</summary>
-        private Pen bluePen;
+        private Brush blueBrush;
 
-        /// <summary>The green pen.</summary>
-        private Pen greenPen;
+        private Brush greenBrush;
 
         /// <summary>The font</summary>
-        private Font font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular);
+        //private Font font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular);
 
         /// <summary>Toggles the speed at which the simulation runs.</summary>
         private bool fastRender;
@@ -110,13 +108,16 @@ namespace SmartSweepersSlimDX
         /// <summary>Window dimension.</summary>
         private int clientHeight;
 
+        private WindowRenderTarget renderTarget;
         #endregion
 
         #region Constructor
 
         /// <summary>Initializes a new instance of the <see cref="Controller"/> class.</summary>
-        public Controller()
+        public Controller(WindowRenderTarget renderTarget)
         {
+            this.renderTarget = renderTarget;
+
             sweepersCount = Params.Instance.NumSweepers;
             fastRender = false;
             ticks = 0;
@@ -156,9 +157,9 @@ namespace SmartSweepersSlimDX
             }
 
             //create a pen for the graph drawing
-            bluePen = new Pen(new SolidBrush(Color.FromArgb(0, 0, 255)));
-            redPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0)));
-            greenPen = new Pen(new SolidBrush(Color.FromArgb(0, 150, 0)));
+            blueBrush = new SolidColorBrush(renderTarget, new Color4(System.Drawing.Color.DeepSkyBlue));
+            redBrush = new SolidColorBrush(renderTarget, new Color4(System.Drawing.Color.MistyRose));
+            greenBrush = new SolidColorBrush(renderTarget, new Color4(System.Drawing.Color.Aquamarine));
 
             //fill the vertex buffers
             for (i = 0; i < NumSweeperVerts; ++i)
@@ -177,13 +178,10 @@ namespace SmartSweepersSlimDX
         #region Public Methods
 
         /// <summary>Renders the specified surface.</summary>
-        /// <param name="surface">The surface.</param>
-        public void Render(Graphics surface)
+        public void Render()
         {
-            surface.Clear(SystemColors.Control);
-
             //render the stats
-            surface.DrawString(string.Format("Generation: {0}", generations), font, bluePen.Brush, 10, 10);
+            //surface.DrawString(string.Format("Generation: {0}", generations), font, bluePen.Brush, 10, 10);
 
             int i = 0;
 
@@ -199,22 +197,21 @@ namespace SmartSweepersSlimDX
                     WorldTransform(mineVB, mines[i]);
 
                     //draw the mines
-                    surface.DrawRectangle(
-                        greenPen,
+                    renderTarget.DrawRectangle(greenBrush, new System.Drawing.RectangleF(
                         (float)mineVB[0].X,
                         (float)mineVB[0].Y,
                         (float)mineVB[2].X - (float)mineVB[0].X,
-                        (float)mineVB[2].Y - (float)mineVB[0].Y);
+                        (float)mineVB[2].Y - (float)mineVB[0].Y));
                 }
 
                 //render the sweepers
                 for (i = 0; i < sweepersCount; i++)
                 {
-                    var pen = bluePen;
+                    var brush = blueBrush;
 
                     if (i == Params.Instance.NumElite)
                     {
-                        pen = redPen;
+                        brush = redBrush;
                     }
 
                     //grab the sweeper vertices
@@ -233,25 +230,49 @@ namespace SmartSweepersSlimDX
                             sweepers[i].lookAt.X,
                             sweepers[i].lookAt.Y);
                      
-                        surface.DrawString(msg, font, bluePen.Brush, 10, 380);
+                        //surface.DrawString(msg, font, blueBrush.Brush, 10, 380);
                     }
 
-                    //draw the sweeper left track
-                    surface.DrawLines(pen, sweeperVB.Take(4).ToArray());
-                    surface.DrawLine(pen, sweeperVB[0], sweeperVB[3]);
+                    //draw the sweeper's left track
+                    var geometry = new PathGeometry(renderTarget.Factory);
+                    using (GeometrySink sink = geometry.Open())
+                    {
+                        sink.BeginFigure(sweeperVB[0], FigureBegin.Filled);
+                        sink.AddLines(sweeperVB.Take(4).ToArray());
+                        sink.AddLine(sweeperVB[0]);
+                        sink.EndFigure(FigureEnd.Closed);
+                        sink.Close();
+                    }
 
-                    //draw the sweeper right track
-                    surface.DrawLines(pen, sweeperVB.Skip(4).Take(4).ToArray());
-                    surface.DrawLine(pen, sweeperVB[4], sweeperVB[7]);
+                    renderTarget.FillGeometry(geometry, brush);
 
-                    surface.DrawLine(pen, sweeperVB[8], sweeperVB[9]);
+                    //draw the sweeper's right track
+                    geometry = new PathGeometry(renderTarget.Factory);
+                    using (GeometrySink sink = geometry.Open())
+                    {
+                        sink.BeginFigure(sweeperVB[4], FigureBegin.Filled);
+                        sink.AddLines(sweeperVB.Skip(4).Take(4).ToArray());
+                        sink.AddLine(sweeperVB[4]);
+                        sink.EndFigure(FigureEnd.Closed);
+                        sink.Close();
+                    }
+                    renderTarget.FillGeometry(geometry, brush);
 
-                    surface.DrawLines(pen, sweeperVB.Skip(10).ToArray());
+                    //draw the sweeper's body
+                    geometry = new PathGeometry(renderTarget.Factory);
+                    using (GeometrySink sink = geometry.Open())
+                    {
+                        sink.BeginFigure(sweeperVB[8], FigureBegin.Filled);
+                        sink.AddLines(sweeperVB.Skip(7).ToArray());
+                        sink.EndFigure(FigureEnd.Closed);
+                        sink.Close();
+                    }
+                    renderTarget.FillGeometry(geometry, brush);
                 }
             }
             else
             {
-                PlotStats(surface);
+                //PlotStats(surface);
             }
         }
 
@@ -264,8 +285,8 @@ namespace SmartSweepersSlimDX
         public void WorldTransform(System.Drawing.PointF[] VBuffer, Vector2 vPos)
         {
             var transformMatrix = new System.Drawing.Drawing2D.Matrix();
-            transformMatrix.Scale((float)Params.Instance.MineScale, (float)Params.Instance.MineScale);
-            transformMatrix.Translate((float)vPos.X, (float)vPos.Y);
+            transformMatrix.Scale((float)Params.Instance.MineScale, (float)Params.Instance.MineScale, System.Drawing.Drawing2D.MatrixOrder.Append);
+            transformMatrix.Translate((float)vPos.X, (float)vPos.Y, System.Drawing.Drawing2D.MatrixOrder.Append);
             transformMatrix.TransformPoints(VBuffer);
         }
 
@@ -369,20 +390,21 @@ namespace SmartSweepersSlimDX
 
         /// <summary>Plots a graph of the average and best fitnesses over the course of a run.</summary>
         /// <param name="surface">The surface.</param>
-        private void PlotStats(Graphics surface)
+        private void PlotStats(System.Drawing.Graphics surface)
         {
+            /*
+
             string s = string.Format("Best Fitness: {0}", geneticAlgorithm.BestFitness());
-            surface.DrawString(s, font, bluePen.Brush, 5, 20);
+            surface.DrawString(s, font, blueBrush.Brush, 5, 20);
 
             s = string.Format("Average Fitness: {0}", geneticAlgorithm.AverageFitness());
-            surface.DrawString(s, font, bluePen.Brush, 5, 40);
+            surface.DrawString(s, font, blueBrush.Brush, 5, 40);
 
             //render the graph
             float HSlice = (float)clientWidth / (generations + 1);
             float VSlice = (float)clientHeight / (((float)geneticAlgorithm.BestFitness() + 1) * 2);
 
             //plot the graph for the best fitness
-            /*
             float x = 0;
             int i = 0;
 
