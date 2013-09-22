@@ -14,7 +14,6 @@ namespace SmartSweepersSlimDX
     internal class SmartSweepers2D : SmartSweepers
     {
         private SolidColorBrush brush;
-        private Controller controller;
 
         /// <summary>Disposes of object resources.</summary>
         /// <param name="disposeManagedResources">If true, managed resources should be
@@ -40,8 +39,6 @@ namespace SmartSweepersSlimDX
 
             InitializeDevice(settings);
 
-            controller = new Controller(Context2D.RenderTarget);
-
             brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
         }
 
@@ -53,7 +50,10 @@ namespace SmartSweepersSlimDX
         {
             brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
 
-            controller.Update();
+            if (!controller.FastRender())
+            {
+                controller.Update();
+            }
 
             Context2D.RenderTarget.BeginDraw();
             Context2D.RenderTarget.Transform = Matrix3x2.Identity;

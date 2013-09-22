@@ -5,6 +5,7 @@ using SmartSweepersSlimDX.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SlimDX.DirectWrite;
 
 namespace SmartSweepersSlimDX
 {
@@ -109,6 +110,8 @@ namespace SmartSweepersSlimDX
         private int clientHeight;
 
         private WindowRenderTarget renderTarget;
+
+        private TextFormat statsFormat = new TextFormat(new SlimDX.DirectWrite.Factory(), "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 14, "arial");
         #endregion
 
         #region Constructor
@@ -185,6 +188,14 @@ namespace SmartSweepersSlimDX
 
             int i = 0;
 
+            string stats = string.Format("Generation: {0}\nBest Fitness: {1}\nAverage Fitness: {2:0.00}\nCycles: {3}",
+                generations, 
+                geneticAlgorithm.BestFitness(), 
+                geneticAlgorithm.AverageFitness(), 
+                ticks);
+
+            renderTarget.DrawText(stats, statsFormat, new System.Drawing.Rectangle(5, 5, 300, 100), blueBrush);
+
             //do not render if running at accelerated speed
             if (!fastRender)
             {
@@ -212,8 +223,6 @@ namespace SmartSweepersSlimDX
                     if (i == Params.Instance.NumElite)
                     {
                         brush = redBrush;
-
-                        System.Diagnostics.Debug.WriteLine(sweepers[i].rotation);
                     }
 
                     //grab the sweeper vertices
@@ -231,7 +240,7 @@ namespace SmartSweepersSlimDX
                             sweepers[i].rotation,
                             sweepers[i].lookAt.X,
                             sweepers[i].lookAt.Y);
-                     
+
                         //surface.DrawString(msg, font, blueBrush.Brush, 10, 380);
                     }
 
@@ -274,7 +283,7 @@ namespace SmartSweepersSlimDX
             }
             else
             {
-                //PlotStats(surface);
+                PlotStats();
             }
         }
 
@@ -391,17 +400,9 @@ namespace SmartSweepersSlimDX
         #region Private Methods
 
         /// <summary>Plots a graph of the average and best fitnesses over the course of a run.</summary>
-        /// <param name="surface">The surface.</param>
-        private void PlotStats(System.Drawing.Graphics surface)
+        private void PlotStats()
         {
             /*
-
-            string s = string.Format("Best Fitness: {0}", geneticAlgorithm.BestFitness());
-            surface.DrawString(s, font, blueBrush.Brush, 5, 20);
-
-            s = string.Format("Average Fitness: {0}", geneticAlgorithm.AverageFitness());
-            surface.DrawString(s, font, blueBrush.Brush, 5, 40);
-
             //render the graph
             float HSlice = (float)clientWidth / (generations + 1);
             float VSlice = (float)clientHeight / (((float)geneticAlgorithm.BestFitness() + 1) * 2);

@@ -34,7 +34,9 @@ namespace SmartSweepersSlimDX
         private UserInterface userInterface;
         private UserInterfaceRenderer userInterfaceRenderer;
         private bool isFullScreen = false;
+        private System.Threading.Thread fastUpdate;
 
+        protected Controller controller;
         protected SlimDX.Color4 brushColor = new SlimDX.Color4(0.93f, 0.40f, 0.08f);
 
         /// <summary>
@@ -96,7 +98,7 @@ namespace SmartSweepersSlimDX
             form.MouseClick += HandleMouseClick;
             form.KeyDown += HandleKeyDown;
             form.KeyUp += HandleKeyUp;
-            form.Closed += (o, args) => { isFormClosed = true; };
+            form.Closed += (o, args) => { isFormClosed = true; Debug.WriteLine("closing..."); };
             form.Resize += (o, args) =>
             {
                 if (form.WindowState != currentFormWindowState)
@@ -122,6 +124,8 @@ namespace SmartSweepersSlimDX
             OnResourceLoad();
 
             clock.Start();
+
+            controller = new Controller(Context2D.RenderTarget);
 
             MessagePump.Run(form, () =>
             {
@@ -408,6 +412,26 @@ namespace SmartSweepersSlimDX
                 }
 
                 OnResourceLoad();
+            }
+            else if (e.KeyCode == Keys.F && controller != null)
+            {
+                controller.FastRenderToggle();
+                if (controller.FastRender())
+                {
+                    fastUpdate = new System.Threading.Thread(new System.Threading.ThreadStart(() =>
+                    {
+                        while (true)
+                        {
+                            controller.Update();
+                        }
+                    }));
+
+                    fastUpdate.Start();
+                }
+                else
+                {
+                    fastUpdate.Abort();
+                }
             }
         }
 
