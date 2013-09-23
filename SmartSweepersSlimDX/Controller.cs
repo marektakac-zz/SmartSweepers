@@ -220,7 +220,7 @@ namespace SmartSweepersSlimDX
                 {
                     var brush = blueBrush;
 
-                    if (i == Params.Instance.NumElite)
+                    if (i <= Params.Instance.NumElite)
                     {
                         brush = redBrush;
                     }
@@ -233,7 +233,7 @@ namespace SmartSweepersSlimDX
 
                     if (i == 0)
                     {
-                        var msg = string.Format("[{0:F0} , {1:F0}] {2:F0} {3:F0} [{4:F0} , {5:F0}]",
+                        var msg = string.Format("[{0:0.0} , {1:0.0}] {2:0.0} {3:0.0} [{4:0.0} , {5:0.0}]",
                             sweepers[i].Position().X,
                             sweepers[i].Position().Y,
                             sweepers[i].speed,
@@ -241,7 +241,7 @@ namespace SmartSweepersSlimDX
                             sweepers[i].lookAt.X,
                             sweepers[i].lookAt.Y);
 
-                        //surface.DrawString(msg, font, blueBrush.Brush, 10, 380);
+                        renderTarget.DrawText(msg, statsFormat, new System.Drawing.Rectangle(5, 570, 300, 30), blueBrush);
                     }
 
                     //draw the sweeper's left track

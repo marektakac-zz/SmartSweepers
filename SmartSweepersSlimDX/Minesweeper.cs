@@ -141,15 +141,21 @@ namespace SmartSweepersSlimDX
         /// <param name="sweeper">The sweeper.</param>
         public void WorldTransform(System.Drawing.PointF[] sweeper)
         {
-            var rot = rotation;
-
-            //rot = Math.Atan2(
-
             var matTransform = new System.Drawing.Drawing2D.Matrix();
             matTransform.Scale((float)scale, (float)scale, MatrixOrder.Append);
-            matTransform.Rotate((float)rot, MatrixOrder.Append);
+            matTransform.Rotate((float)RadToDeg(rotation), MatrixOrder.Append);
             matTransform.Translate(position.X, position.Y, MatrixOrder.Append);
             matTransform.TransformPoints(sweeper);
+        }
+
+        private double RadToDeg(double angle)
+        {
+            return angle * (180 / Math.PI);
+        }
+
+        private double DegToRad(double angle)
+        {
+            return Math.PI * angle / 180;
         }
 
         /// <summary>Returns a vector to the closest mine.</summary>

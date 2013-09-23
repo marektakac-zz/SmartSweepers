@@ -165,7 +165,7 @@ namespace SmartSweepersSlimDX
             
             NumMines = 40;
             NumSweepers = 30;
-            NumTicks = 2000;
+            NumTicks = 4000;
             CrossoverRate = 0.7;
             MutationRate = 0.1;
             MaxPerturbation = 0.3;
