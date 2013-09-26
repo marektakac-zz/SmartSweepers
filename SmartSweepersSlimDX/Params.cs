@@ -153,7 +153,7 @@ namespace SmartSweepersSlimDX
             FramesPerSecond = 60;
             InputCount = 4;
             HiddenLayerCount = 1;
-            NeuronsPerHiddenLayer = 6;
+            NeuronsPerHiddenLayer = 8;
             OutputCount = 2;
             ActivationResponse = 1;
             Bias = -1;
@@ -163,7 +163,7 @@ namespace SmartSweepersSlimDX
             SweeperScale = 5;
             MineScale = 2;
             
-            NumMines = 40;
+            NumMines = 50;
             NumSweepers = 30;
             NumTicks = 4000;
             CrossoverRate = 0.7;
