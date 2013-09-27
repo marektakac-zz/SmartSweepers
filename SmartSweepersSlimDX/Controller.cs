@@ -402,38 +402,40 @@ namespace SmartSweepersSlimDX
         /// <summary>Plots a graph of the average and best fitnesses over the course of a run.</summary>
         private void PlotStats()
         {
-            /*
             //render the graph
             float HSlice = (float)clientWidth / (generations + 1);
             float VSlice = (float)clientHeight / (((float)geneticAlgorithm.BestFitness() + 1) * 2);
 
             //plot the graph for the best fitness
             float x = 0;
+            float y = clientHeight;
             int i = 0;
 
-            MoveToEx(surface, 0, cyClient, NULL);
-
-            for (i = 0; i < m_vecBestFitness.size(); ++i)
+            for (i = 0; i < bestFitness.Count; ++i)
             {
-                LineTo(surface, x, cyClient - VSlice * m_vecBestFitness[i]);
-
+                var tempX = x;
+                var tempY = (float)(clientHeight - VSlice * bestFitness[i]);
                 x += HSlice;
+
+                renderTarget.DrawLine(redBrush, tempX, y, x, tempY);
+
+                y = tempY;
             }
 
             //plot the graph for the average fitness
             x = 0;
+            y = clientHeight;
 
-            SelectObject(surface, m_BluePen);
-
-            MoveToEx(surface, 0, cyClient, NULL);
-
-            for (i = 0; i < m_vecAvFitness.size(); ++i)
+            for (i = 0; i < averageFitness.Count; ++i)
             {
-                LineTo(surface, (int)x, (int)(cyClient - VSlice * m_vecAvFitness[i]));
-
+                var tempX = x;
+                var tempY = (float)(clientHeight - VSlice * averageFitness[i]);
                 x += HSlice;
+
+                renderTarget.DrawLine(greenBrush, tempX, y, x, tempY);
+
+                y = tempY;
             }
-             */
         }
 
         #endregion
