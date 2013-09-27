@@ -17,8 +17,6 @@ namespace SmartSweepersSlimDX
     /// </summary>
     internal class SmartSweepers : IDisposable
     {
-        private const int WINDOW_WIDTH = 800;
-        private const int WINDOW_HEIGHT = 600;
         private const string TITLE = "Smart Sweepers";
 
         private readonly Clock clock = new Clock();
@@ -30,7 +28,6 @@ namespace SmartSweepersSlimDX
         private Form form;
         private float frameAccumulator;
         private int frameCount;
-        private bool deviceLost = false;
         private UserInterface userInterface;
         private UserInterfaceRenderer userInterfaceRenderer;
         private bool isFullScreen = false;
@@ -44,7 +41,7 @@ namespace SmartSweepersSlimDX
         /// </summary>
         public int WindowWidth
         {
-            get { return WINDOW_WIDTH; }
+            get { return Params.Instance.WindowWidth; }
         }
 
         /// <summary>
@@ -57,14 +54,7 @@ namespace SmartSweepersSlimDX
         /// </summary>
         public int WindowHeight
         {
-            get { return WINDOW_HEIGHT; }
-        }
-
-        /// <summary>Gets the user interface.</summary>
-        /// <value>The user interface.</value>
-        public UserInterface UserInterface
-        {
-            get { return userInterface; }
+            get { return Params.Instance.WindowHeight; }
         }
 
         /// <summary>
@@ -278,26 +268,6 @@ namespace SmartSweepersSlimDX
         /// <summary>Renders this instance.</summary>
         private void Render()
         {
-            if (deviceLost)
-            {
-                // This should only become true if we're using D3D9, so we can assume the
-                // D3D9 context is valid at this point.
-                /*
-                if (Context9.Device.TestCooperativeLevel() == SlimDX.Direct3D9.ResultCode.DeviceNotReset)
-                {
-                    Context9.Device.Reset(Context9.PresentParameters);
-                    deviceLost = false;
-                    userInterfaceRenderer = new UserInterfaceRenderer9(Context9.Device, WindowWidth, WindowHeight);
-                    OnResourceLoad();
-                }
-                else
-                {
-                    Thread.Sleep(100);
-                    return;
-                }
-                */
-            }
-
             frameAccumulator += FrameDelta;
             ++frameCount;
 
@@ -311,39 +281,16 @@ namespace SmartSweepersSlimDX
                 frameCount = 0;
             }
 
-            try
-            {
-                OnRenderBegin();
-                OnRender();
+            OnRenderBegin();
+            OnRender();
 
-                if (userInterfaceRenderer != null)
-                {
-                    userInterfaceRenderer.Render(userInterface);
-                }
-
-                OnRenderEnd();
-            }
-            catch (SlimDX.Direct3D9.Direct3D9Exception e)
+            if (userInterfaceRenderer != null)
             {
-                if (e.ResultCode == SlimDX.Direct3D9.ResultCode.DeviceLost)
-                {
-                    OnResourceUnload();
-                    userInterfaceRenderer.Dispose();
-                    deviceLost = true;
-                }
-                else
-                {
-                    throw;
-                }
+                userInterfaceRenderer.Render(userInterface);
             }
+
+            OnRenderEnd();
         }
-
-        /// <summary>
-        /// Handles a mouse click event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
-        private void HandleMouseClick(object sender, MouseEventArgs e) { }
 
         /// <summary>
         /// Handles a key down event.
