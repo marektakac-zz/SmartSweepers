@@ -110,8 +110,6 @@ namespace SmartSweepersSlimDX
         private int clientHeight;
 
         private WindowRenderTarget renderTarget;
-
-        private TextFormat statsFormat = new TextFormat(new SlimDX.DirectWrite.Factory(), "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 14, "arial");
         #endregion
 
         #region Constructor
@@ -194,9 +192,11 @@ namespace SmartSweepersSlimDX
                 geneticAlgorithm.AverageFitness(), 
                 ticks);
 
+            using (var factory = new SlimDX.DirectWrite.Factory())
+            using (var format = new TextFormat(factory, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 14, "arial"))
             using (var brush = new SolidColorBrush(renderTarget, blueColor))
             {
-                renderTarget.DrawText(stats, statsFormat, new System.Drawing.Rectangle(5, 5, 300, 100), brush);
+                renderTarget.DrawText(stats, format, new System.Drawing.Rectangle(5, 5, 300, 100), brush);
             }
 
             //do not render if running at accelerated speed
@@ -247,9 +247,11 @@ namespace SmartSweepersSlimDX
                             sweepers[i].lookAt.X,
                             sweepers[i].lookAt.Y);
 
+                        using (var factory = new SlimDX.DirectWrite.Factory())
+                        using (var format = new TextFormat(factory, "Arial", FontWeight.Normal, FontStyle.Normal, FontStretch.Normal, 14, "arial"))
                         using (var brush = new SolidColorBrush(renderTarget, blueColor))
                         {
-                            renderTarget.DrawText(msg, statsFormat, new System.Drawing.Rectangle(5, 570, 300, 30), brush);
+                            renderTarget.DrawText(msg, format, new System.Drawing.Rectangle(5, 570, 300, 30), brush);
                         }
                     }
 
