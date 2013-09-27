@@ -245,40 +245,47 @@ namespace SmartSweepersSlimDX
                     }
 
                     //draw the sweeper's left track
-                    var geometry = new PathGeometry(renderTarget.Factory);
-                    using (GeometrySink sink = geometry.Open())
+                    using (var geometry = new PathGeometry(renderTarget.Factory))
                     {
-                        sink.BeginFigure(sweeperVB[0], FigureBegin.Filled);
-                        sink.AddLines(sweeperVB.Take(4).ToArray());
-                        sink.AddLine(sweeperVB[0]);
-                        sink.EndFigure(FigureEnd.Closed);
-                        sink.Close();
-                    }
+                        using (GeometrySink sink = geometry.Open())
+                        {
+                            sink.BeginFigure(sweeperVB[0], FigureBegin.Filled);
+                            sink.AddLines(sweeperVB.Take(4).ToArray());
+                            sink.AddLine(sweeperVB[0]);
+                            sink.EndFigure(FigureEnd.Closed);
+                            sink.Close();
+                        }
 
-                    renderTarget.FillGeometry(geometry, brush);
+                        renderTarget.FillGeometry(geometry, brush);
+                    }
 
                     //draw the sweeper's right track
-                    geometry = new PathGeometry(renderTarget.Factory);
-                    using (GeometrySink sink = geometry.Open())
+                    using (var geometry = new PathGeometry(renderTarget.Factory))
                     {
-                        sink.BeginFigure(sweeperVB[4], FigureBegin.Filled);
-                        sink.AddLines(sweeperVB.Skip(4).Take(4).ToArray());
-                        sink.AddLine(sweeperVB[4]);
-                        sink.EndFigure(FigureEnd.Closed);
-                        sink.Close();
+                        using (GeometrySink sink = geometry.Open())
+                        {
+                            sink.BeginFigure(sweeperVB[4], FigureBegin.Filled);
+                            sink.AddLines(sweeperVB.Skip(4).Take(4).ToArray());
+                            sink.AddLine(sweeperVB[4]);
+                            sink.EndFigure(FigureEnd.Closed);
+                            sink.Close();
+                        }
+
+                        renderTarget.FillGeometry(geometry, brush);
                     }
-                    renderTarget.FillGeometry(geometry, brush);
 
                     //draw the sweeper's body
-                    geometry = new PathGeometry(renderTarget.Factory);
-                    using (GeometrySink sink = geometry.Open())
+                    using (var geometry = new PathGeometry(renderTarget.Factory))
                     {
-                        sink.BeginFigure(sweeperVB[8], FigureBegin.Filled);
-                        sink.AddLines(sweeperVB.Skip(7).ToArray());
-                        sink.EndFigure(FigureEnd.Closed);
-                        sink.Close();
+                        using (GeometrySink sink = geometry.Open())
+                        {
+                            sink.BeginFigure(sweeperVB[8], FigureBegin.Filled);
+                            sink.AddLines(sweeperVB.Skip(7).ToArray());
+                            sink.EndFigure(FigureEnd.Closed);
+                            sink.Close();
+                        }
+                        renderTarget.FillGeometry(geometry, brush);
                     }
-                    renderTarget.FillGeometry(geometry, brush);
                 }
             }
             else
