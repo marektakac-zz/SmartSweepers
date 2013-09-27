@@ -28,8 +28,6 @@ namespace SmartSweepersSlimDX
         private Form form;
         private float frameAccumulator;
         private int frameCount;
-        private UserInterface userInterface;
-        private UserInterfaceRenderer userInterfaceRenderer;
         private bool isFullScreen = false;
         private System.Threading.Thread fastUpdate;
 
@@ -58,11 +56,6 @@ namespace SmartSweepersSlimDX
         }
 
         /// <summary>
-        /// Represents a Direct3D10 Context, only valid after calling InitializeDevice(DeviceSettings10)
-        /// </summary>
-        public DeviceContext10 Context10 { get; private set; }
-
-        /// <summary>
         /// Represents a Direct2D Context, only valid after calling InitializeDevice(DeviceSettings2D)
         /// </summary>
         public DeviceContext2D Context2D { get; private set; }
@@ -85,10 +78,9 @@ namespace SmartSweepersSlimDX
             bool isFormClosed = false;
             bool formIsResizing = false;
 
-            form.MouseClick += HandleMouseClick;
             form.KeyDown += HandleKeyDown;
             form.KeyUp += HandleKeyUp;
-            form.Closed += (o, args) => { isFormClosed = true; Debug.WriteLine("closing..."); };
+            form.Closed += (o, args) => { isFormClosed = true; };
             form.Resize += (o, args) =>
             {
                 if (form.WindowState != currentFormWindowState)
@@ -99,16 +91,7 @@ namespace SmartSweepersSlimDX
                 currentFormWindowState = form.WindowState;
             };
             form.ResizeBegin += (o, args) => { formIsResizing = true; };
-            form.ResizeEnd += (o, args) =>
-            {
-                formIsResizing = false;
-                HandleResize(o, args);
-            };
-
-            userInterface = new UserInterface();
-            var stats = new Element();
-            stats.SetBinding("Label", framesPerSecond);
-            userInterface.Container.Add(stats);
+            form.ResizeEnd += (o, args) => { formIsResizing = false; HandleResize(o, args); };
 
             OnInitialize();
             OnResourceLoad();
@@ -155,11 +138,6 @@ namespace SmartSweepersSlimDX
             {
                 if (disposeManagedResources)
                 {
-                    if (userInterfaceRenderer != null)
-                    {
-                        userInterfaceRenderer.Dispose();
-                    }
-
                     apiContext.Dispose();
                     form.Dispose();
                 }
@@ -232,20 +210,6 @@ namespace SmartSweepersSlimDX
             Context2D = result;
         }
 
-        /// <summary>
-        /// Initializes a <see cref="DeviceContext10">Direct3D10 device context</see> according to the specified settings.
-        /// The base class retains ownership of the context and will dispose of it when appropriate.
-        /// </summary>
-        /// <param name="settings">The settings.</param>
-        /// <returns>The initialized device context.</returns>
-        protected void InitializeDevice(DeviceSettings10 settings)
-        {
-            var result = new DeviceContext10(form.Handle, settings);
-            userInterfaceRenderer = new UserInterfaceRenderer10(result.Device, settings.Width, settings.Height);
-            apiContext = result;
-            Context10 = result;
-        }
-
         /// <summary>Quits this instance.</summary>
         protected void Quit()
         {
@@ -261,7 +225,6 @@ namespace SmartSweepersSlimDX
         private void Update()
         {
             FrameDelta = clock.Update();
-            userInterface.Container.Update();
             OnUpdate();
         }
 
@@ -283,12 +246,6 @@ namespace SmartSweepersSlimDX
 
             OnRenderBegin();
             OnRender();
-
-            if (userInterfaceRenderer != null)
-            {
-                userInterfaceRenderer.Render(userInterface);
-            }
-
             OnRenderEnd();
         }
 
@@ -335,34 +292,6 @@ namespace SmartSweepersSlimDX
 
                 isFullScreen = !isFullScreen;
 
-                /*
-                if (Context9 != null)
-                {
-                    userInterfaceRenderer.Dispose();
-
-                    Context9.PresentParameters.BackBufferWidth = _configuration.WindowWidth;
-                    Context9.PresentParameters.BackBufferHeight = _configuration.WindowHeight;
-                    Context9.PresentParameters.Windowed = !isFullScreen;
-
-                    if (!isFullScreen)
-                        _form.MaximizeBox = true;
-
-                    Context9.Device.Reset(Context9.PresentParameters);
-
-                    userInterfaceRenderer = new UserInterfaceRenderer9(Context9.Device, _form.ClientSize.Width, _form.ClientSize.Height);
-                }
-                else 
-                 */
-                if (Context10 != null)
-                {
-                    userInterfaceRenderer.Dispose();
-
-                    Context10.SwapChain.ResizeBuffers(1, WindowWidth, WindowHeight, Context10.SwapChain.Description.ModeDescription.Format, SwapChainFlags.AllowModeSwitch);
-                    Context10.SwapChain.SetFullScreenState(isFullScreen, null);
-
-                    userInterfaceRenderer = new UserInterfaceRenderer10(Context10.Device, WindowWidth, WindowHeight);
-                }
-
                 OnResourceLoad();
             }
             else if (e.KeyCode == Keys.F && controller != null)
@@ -395,28 +324,6 @@ namespace SmartSweepersSlimDX
             }
 
             OnResourceUnload();
-            /*
-            if (Context9 != null)
-            {
-                userInterfaceRenderer.Dispose();
-
-                Context9.PresentParameters.BackBufferWidth = 0;
-                Context9.PresentParameters.BackBufferHeight = 0;
-
-                Context9.Device.Reset(Context9.PresentParameters);
-
-                userInterfaceRenderer = new UserInterfaceRenderer9(Context9.Device, _form.ClientSize.Width, _form.ClientSize.Height);
-            }
-            else 
-            */
-            if (Context10 != null)
-            {
-                userInterfaceRenderer.Dispose();
-
-                Context10.SwapChain.ResizeBuffers(1, WindowWidth, WindowHeight, Context10.SwapChain.Description.ModeDescription.Format, Context10.SwapChain.Description.Flags);
-
-                userInterfaceRenderer = new UserInterfaceRenderer10(Context10.Device, form.ClientSize.Width, form.ClientSize.Height);
-            }
 
             OnResourceLoad();
         }
