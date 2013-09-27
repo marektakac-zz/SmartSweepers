@@ -260,6 +260,11 @@ namespace SmartSweepersSlimDX
         protected void Quit()
         {
             form.Close();
+
+            if (fastUpdate != null && fastUpdate.ThreadState != System.Threading.ThreadState.Stopped)
+            {
+                fastUpdate.Abort();
+            }
         }
 
         /// <summary>Updates state.</summary>
