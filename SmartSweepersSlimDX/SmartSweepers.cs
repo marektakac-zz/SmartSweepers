@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using SlimDX.DXGI;
 using SlimDX.Windows;
 using SmartSweepersSlimDX.Rendering;
-using SmartSweepersSlimDX.Rendering.UI;
 using SmartSweepersSlimDX.UI;
 using SmartSweepersSlimDX.UI.Bindings;
 using SmartSweepersSlimDX.Utility;
@@ -26,8 +25,6 @@ namespace SmartSweepersSlimDX
         private IDisposable apiContext;
         private FormWindowState currentFormWindowState;
         private Form form;
-        private float frameAccumulator;
-        private int frameCount;
         private bool isFullScreen = false;
         private System.Threading.Thread fastUpdate;
 
@@ -231,19 +228,6 @@ namespace SmartSweepersSlimDX
         /// <summary>Renders this instance.</summary>
         private void Render()
         {
-            frameAccumulator += FrameDelta;
-            ++frameCount;
-
-            if (frameAccumulator >= 1.0f)
-            {
-                framesPerSecond.Value = frameCount / frameAccumulator;
-
-                //Debug.WriteLine(string.Format("FPS: {0:0}", framesPerSecond.Value));
-
-                frameAccumulator = 0.0f;
-                frameCount = 0;
-            }
-
             OnRenderBegin();
             OnRender();
             OnRenderEnd();
