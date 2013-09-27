@@ -13,18 +13,6 @@ namespace SmartSweepersSlimDX
     {
         #region General parameters
 
-        /// <summary>Gets the pi.</summary>
-        /// <value>The pi.</value>
-        public double Pi { get { return Math.PI; } }
-
-        /// <summary>Gets the half pi.</summary>
-        /// <value>The half pi.</value>
-        public double HalfPi { get { return Pi / 2; } }
-
-        /// <summary>Gets the two pi.</summary>
-        /// <value>The two pi.</value>
-        public double TwoPi { get { return Pi * 2; } }
-
         /// <summary>Gets the width of the window.</summary>
         /// <value>The width of the window.</value>
         public int WindowWidth { get; private set; }
@@ -32,10 +20,6 @@ namespace SmartSweepersSlimDX
         /// <summary>Gets the height of the window.</summary>
         /// <value>The height of the window.</value>
         public int WindowHeight { get; private set; }
-
-        /// <summary>Gets the i frames per second.</summary>
-        /// <value>The i frames per second.</value>
-        public int FramesPerSecond { get; private set; }
 
         #endregion
 
@@ -72,10 +56,6 @@ namespace SmartSweepersSlimDX
         /// <summary>Gets the max turn rate.</summary>
         /// <value>The max turn rate.</value>
         public double MaxTurnRate { get; private set; }
-
-        /// <summary>Gets the max speed.</summary>
-        /// <value>The max speed.</value>
-        public double MaxSpeed { get; private set; }
 
         /// <summary>Gets the sweeper scale.</summary>
         /// <value>The sweeper scale.</value>
@@ -150,7 +130,6 @@ namespace SmartSweepersSlimDX
 
             //LoadInParameters("params.ini");
 
-            FramesPerSecond = 60;
             InputCount = 4;
             HiddenLayerCount = 1;
             NeuronsPerHiddenLayer = 8;
@@ -158,7 +137,6 @@ namespace SmartSweepersSlimDX
             ActivationResponse = 1;
             Bias = -1;
             MaxTurnRate = 0.3;
-            MaxSpeed = 2;
 
             SweeperScale = 5;
             MineScale = 2;
@@ -171,14 +149,6 @@ namespace SmartSweepersSlimDX
             MaxPerturbation = 0.3;
             NumElite = 4;
             NumCopiesElite = 1;
-        }
-
-        /// <summary>Loads the in parameters.</summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
-        public bool LoadInParameters(string fileName)
-        {
-            throw new NotImplementedException("LoadInParameters method is still not implemented.");
         }
     }
 }

@@ -51,7 +51,7 @@ namespace SmartSweepersSlimDX
         /// <summary>Initializes a new instance of the <see cref="Minesweeper" /> class.</summary>
         public Minesweeper()
         {
-            rotation = Utils.RandomDouble() * Params.Instance.TwoPi;
+            rotation = Utils.RandomDouble() * Math.PI * 2;
             lTrack = 0.16;
             rTrack = 0.16;
             fitness = 0;
@@ -212,7 +212,7 @@ namespace SmartSweepersSlimDX
             fitness = 0;
 
             //and the rotation
-            rotation = Utils.RandomDouble() * Params.Instance.TwoPi;
+            rotation = Utils.RandomDouble() * Math.PI * 2;
 
             return;
         }
