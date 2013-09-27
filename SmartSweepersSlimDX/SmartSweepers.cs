@@ -5,9 +5,6 @@ using System.Windows.Forms;
 using SlimDX.DXGI;
 using SlimDX.Windows;
 using SmartSweepersSlimDX.Rendering;
-using SmartSweepersSlimDX.UI;
-using SmartSweepersSlimDX.UI.Bindings;
-using SmartSweepersSlimDX.Utility;
 
 namespace SmartSweepersSlimDX
 {
@@ -17,9 +14,6 @@ namespace SmartSweepersSlimDX
     internal class SmartSweepers : IDisposable
     {
         private const string TITLE = "Smart Sweepers";
-
-        private readonly Clock clock = new Clock();
-        private readonly Bindable<float> framesPerSecond = new Bindable<float>();
 
         private bool disposed = false;
         private IDisposable apiContext;
@@ -38,11 +32,6 @@ namespace SmartSweepersSlimDX
         {
             get { return Params.Instance.WindowWidth; }
         }
-
-        /// <summary>
-        /// Gets the number of seconds passed since the last frame.
-        /// </summary>
-        public float FrameDelta { get; private set; }
 
         /// <summary>
         /// Gets the height of the renderable area of the window.
@@ -91,9 +80,6 @@ namespace SmartSweepersSlimDX
             form.ResizeEnd += (o, args) => { formIsResizing = false; HandleResize(o, args); };
 
             OnInitialize();
-            OnResourceLoad();
-
-            clock.Start();
 
             controller = new Controller(Context2D.RenderTarget);
 
@@ -111,8 +97,6 @@ namespace SmartSweepersSlimDX
                     Render();
                 }
             });
-
-            OnResourceUnload();
         }
 
         /// <summary>
@@ -160,16 +144,6 @@ namespace SmartSweepersSlimDX
         /// In a derived class, implements logic to initialize the instance.
         /// </summary>
         protected virtual void OnInitialize() { }
-
-        /// <summary>
-        /// Called when resources are loaded.
-        /// </summary>
-        protected virtual void OnResourceLoad() { }
-
-        /// <summary>
-        /// Called when resources are unloaded.
-        /// </summary>
-        protected virtual void OnResourceUnload() { }
 
         /// <summary>
         /// In a derived class, implements logic to update any relevant state.
@@ -221,7 +195,6 @@ namespace SmartSweepersSlimDX
         /// <summary>Updates state.</summary>
         private void Update()
         {
-            FrameDelta = clock.Update();
             OnUpdate();
         }
 
@@ -272,11 +245,7 @@ namespace SmartSweepersSlimDX
             }
             else if (e.Alt && e.KeyCode == Keys.Enter)
             {
-                OnResourceUnload();
-
                 isFullScreen = !isFullScreen;
-
-                OnResourceLoad();
             }
             else if (e.KeyCode == Keys.F && controller != null)
             {
@@ -306,10 +275,6 @@ namespace SmartSweepersSlimDX
             {
                 return;
             }
-
-            OnResourceUnload();
-
-            OnResourceLoad();
         }
     }
 }

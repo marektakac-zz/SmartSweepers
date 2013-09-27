@@ -68,45 +68,5 @@ namespace SmartSweepersSlimDX
                 arg = max;
             }
         }
-
-        /// <summary>
-        /// Clamps the first argument between the second two.
-        /// </summary>
-        public static void Clamp(ref float arg, float min, float max)
-        {
-            if (min > max)
-            {
-                throw new ArgumentException(string.Format("MIN={0} is greater then MAX={1}", min, max));
-            }
-
-            if (arg < min)
-            {
-                arg = min;
-            }
-            else if (arg > max)
-            {
-                arg = max;
-            }
-        }
-
-        /// <summary>
-        /// Clamps the first argument between the second two.
-        /// </summary>
-        public static void Clamp(ref int arg, int min, int max)
-        {
-            if (min > max)
-            {
-                throw new ArgumentException(string.Format("MIN={0} is greater then MAX={1}", min, max));
-            }
-
-            if (arg < min)
-            {
-                arg = min;
-            }
-            else if (arg > max)
-            {
-                arg = max;
-            }
-        }
     }
 }
