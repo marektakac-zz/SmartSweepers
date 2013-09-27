@@ -13,8 +13,6 @@ namespace SmartSweepersSlimDX
 {
     internal class SmartSweepers2D : SmartSweepers
     {
-        private SolidColorBrush brush;
-
         /// <summary>Disposes of object resources.</summary>
         /// <param name="disposeManagedResources">If true, managed resources should be
         /// disposed of in addition to unmanaged resources.</param>
@@ -22,7 +20,6 @@ namespace SmartSweepersSlimDX
         {
             if (disposeManagedResources)
             {
-                brush.Dispose();
             }
 
             base.Dispose(disposeManagedResources);
@@ -38,8 +35,6 @@ namespace SmartSweepersSlimDX
             };
 
             InitializeDevice(settings);
-
-            brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
         }
 
         /// <summary>
@@ -48,8 +43,6 @@ namespace SmartSweepersSlimDX
         /// </summary>
         protected override void OnRenderBegin()
         {
-            brush = new SolidColorBrush(Context2D.RenderTarget, brushColor);
-
             if (!controller.FastRender())
             {
                 controller.Update();

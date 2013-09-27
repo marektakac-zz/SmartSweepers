@@ -85,11 +85,11 @@ namespace SmartSweepersSlimDX
         /// <summary>Stores the best fitness per generation.</summary>
         private List<double> bestFitness = new List<double>();
 
-        private Brush redBrush;
+        private Color4 redColor;
 
-        private Brush blueBrush;
+        private Color4 blueColor;
 
-        private Brush greenBrush;
+        private Color4 greenColor;
 
         /// <summary>The font</summary>
         //private Font font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular);
@@ -160,9 +160,9 @@ namespace SmartSweepersSlimDX
             }
 
             //create a pen for the graph drawing
-            blueBrush = new SolidColorBrush(renderTarget, new Color4(System.Drawing.Color.DeepSkyBlue));
-            redBrush = new SolidColorBrush(renderTarget, new Color4(System.Drawing.Color.MistyRose));
-            greenBrush = new SolidColorBrush(renderTarget, new Color4(System.Drawing.Color.Aquamarine));
+            blueColor = new Color4(System.Drawing.Color.DeepSkyBlue);
+            redColor = new Color4(System.Drawing.Color.MistyRose);
+            greenColor = new Color4(System.Drawing.Color.Aquamarine);
 
             //fill the vertex buffers
             for (i = 0; i < NumSweeperVerts; ++i)
@@ -194,7 +194,10 @@ namespace SmartSweepersSlimDX
                 geneticAlgorithm.AverageFitness(), 
                 ticks);
 
-            renderTarget.DrawText(stats, statsFormat, new System.Drawing.Rectangle(5, 5, 300, 100), blueBrush);
+            using (var brush = new SolidColorBrush(renderTarget, blueColor))
+            {
+                renderTarget.DrawText(stats, statsFormat, new System.Drawing.Rectangle(5, 5, 300, 100), brush);
+            }
 
             //do not render if running at accelerated speed
             if (!fastRender)
@@ -207,22 +210,25 @@ namespace SmartSweepersSlimDX
 
                     WorldTransform(mineVB, mines[i]);
 
-                    //draw the mines
-                    renderTarget.DrawRectangle(greenBrush, new System.Drawing.RectangleF(
-                        (float)mineVB[0].X,
-                        (float)mineVB[0].Y,
-                        (float)mineVB[2].X - (float)mineVB[0].X,
-                        (float)mineVB[2].Y - (float)mineVB[0].Y));
+                    using (var brush = new SolidColorBrush(renderTarget, greenColor))
+                    {
+                        //draw the mines
+                        renderTarget.DrawRectangle(brush, new System.Drawing.RectangleF(
+                            (float)mineVB[0].X,
+                            (float)mineVB[0].Y,
+                            (float)mineVB[2].X - (float)mineVB[0].X,
+                            (float)mineVB[2].Y - (float)mineVB[0].Y));
+                    }
                 }
 
                 //render the sweepers
                 for (i = 0; i < sweepersCount; i++)
                 {
-                    var brush = blueBrush;
+                    var color = blueColor;
 
                     if (i <= Params.Instance.NumElite)
                     {
-                        brush = redBrush;
+                        color = redColor;
                     }
 
                     //grab the sweeper vertices
@@ -241,7 +247,10 @@ namespace SmartSweepersSlimDX
                             sweepers[i].lookAt.X,
                             sweepers[i].lookAt.Y);
 
-                        renderTarget.DrawText(msg, statsFormat, new System.Drawing.Rectangle(5, 570, 300, 30), blueBrush);
+                        using (var brush = new SolidColorBrush(renderTarget, blueColor))
+                        {
+                            renderTarget.DrawText(msg, statsFormat, new System.Drawing.Rectangle(5, 570, 300, 30), brush);
+                        }
                     }
 
                     //draw the sweeper's left track
@@ -256,7 +265,10 @@ namespace SmartSweepersSlimDX
                             sink.Close();
                         }
 
-                        renderTarget.FillGeometry(geometry, brush);
+                        using (var brush = new SolidColorBrush(renderTarget, color))
+                        {
+                            renderTarget.FillGeometry(geometry, brush);
+                        }
                     }
 
                     //draw the sweeper's right track
@@ -271,7 +283,10 @@ namespace SmartSweepersSlimDX
                             sink.Close();
                         }
 
-                        renderTarget.FillGeometry(geometry, brush);
+                        using (var brush = new SolidColorBrush(renderTarget, color))
+                        {
+                            renderTarget.FillGeometry(geometry, brush);
+                        }
                     }
 
                     //draw the sweeper's body
@@ -284,7 +299,11 @@ namespace SmartSweepersSlimDX
                             sink.EndFigure(FigureEnd.Closed);
                             sink.Close();
                         }
-                        renderTarget.FillGeometry(geometry, brush);
+
+                        using (var brush = new SolidColorBrush(renderTarget, color))
+                        {
+                            renderTarget.FillGeometry(geometry, brush);
+                        }
                     }
                 }
             }
@@ -424,7 +443,10 @@ namespace SmartSweepersSlimDX
                 var tempY = (float)(clientHeight - VSlice * bestFitness[i]);
                 x += HSlice;
 
-                renderTarget.DrawLine(redBrush, tempX, y, x, tempY);
+                using (var brush = new SolidColorBrush(renderTarget, redColor))
+                {
+                    renderTarget.DrawLine(brush, tempX, y, x, tempY);
+                }
 
                 y = tempY;
             }
@@ -439,7 +461,10 @@ namespace SmartSweepersSlimDX
                 var tempY = (float)(clientHeight - VSlice * averageFitness[i]);
                 x += HSlice;
 
-                renderTarget.DrawLine(greenBrush, tempX, y, x, tempY);
+                using (var brush = new SolidColorBrush(renderTarget, greenColor))
+                {
+                    renderTarget.DrawLine(brush, tempX, y, x, tempY);
+                }
 
                 y = tempY;
             }
