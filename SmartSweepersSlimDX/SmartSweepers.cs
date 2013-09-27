@@ -135,6 +135,7 @@ namespace SmartSweepersSlimDX
         {
             return new RenderForm()
             {
+                Icon = Icon.ExtractAssociatedIcon("SmartSweepersSlimDX.exe"),
                 Text = TITLE,
                 ClientSize = new Size(WindowWidth, WindowHeight)
             };
