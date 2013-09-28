@@ -1,11 +1,11 @@
-﻿using SlimDX;
-using SlimDX.Direct2D;
-using SmartSweepersSlimDX.AI;
-using SmartSweepersSlimDX.Rendering;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using SlimDX;
+using SlimDX.Direct2D;
 using SlimDX.DirectWrite;
+using SmartSweepersSlimDX.AI;
+using SmartSweepersSlimDX.AI.Utils;
 
 namespace SmartSweepersSlimDX
 {
@@ -153,8 +153,8 @@ namespace SmartSweepersSlimDX
             for (i = 0; i < minesCount; ++i)
             {
                 mines.Add(new Vector2(
-                    (float)(Utils.RandomDouble() * clientWidth),
-                    (float)(Utils.RandomDouble() * clientHeight)));
+                    (float)(RandomNumbers.Double() * clientWidth),
+                    (float)(RandomNumbers.Double() * clientHeight)));
             }
 
             //create a pen for the graph drawing
@@ -362,8 +362,8 @@ namespace SmartSweepersSlimDX
                         //mine found so replace the mine with another at a random 
                         //position
                         mines[GrabHit] = new Vector2(
-                            (float)(Utils.RandomDouble() * clientWidth),
-                            (float)(Utils.RandomDouble() * clientHeight));
+                            (float)(RandomNumbers.Double() * clientWidth),
+                            (float)(RandomNumbers.Double() * clientHeight));
                     }
 
                     //update the chromos fitness score

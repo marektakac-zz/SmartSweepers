@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using SlimDX;
-using SlimDX.Direct2D;
+﻿using SlimDX;
 using SmartSweepersSlimDX.Rendering;
-using System.Diagnostics;
 
 namespace SmartSweepersSlimDX
 {

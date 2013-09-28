@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SmartSweepersSlimDX.AI.Utils;
 
 namespace SmartSweepersSlimDX.AI
 {
@@ -83,7 +84,7 @@ namespace SmartSweepersSlimDX.AI
 
                 for (int chromoIndex = 0; chromoIndex < chromoLength; ++chromoIndex)
                 {
-                    genomes[genomeIndex].AddWeight(Utils.RandomClamped());
+                    genomes[genomeIndex].AddWeight(RandomNumbers.Clamped());
                 }
             }
         }
@@ -176,7 +177,7 @@ namespace SmartSweepersSlimDX.AI
         private void Crossover(IList<double> mum, IList<double> dad, out List<double> girl, out List<double> boy)
         {
             //just return parents as offspring dependent on the rate or if parents are the same
-            if ((Utils.RandomDouble() > crossoverRate) || (mum == dad))
+            if ((RandomNumbers.Double() > crossoverRate) || (mum == dad))
             {
                 girl = new List<double>(mum);
                 boy = new List<double>(dad);
@@ -188,7 +189,7 @@ namespace SmartSweepersSlimDX.AI
             boy = new List<double>();
 
             //determine a crossover point
-            int crossoverPoint = Utils.RandomInt(chromoLength - 1);
+            int crossoverPoint = RandomNumbers.Int(chromoLength - 1);
 
             //create the offspring
             for (int i = 0; i < crossoverPoint; ++i)
@@ -216,10 +217,10 @@ namespace SmartSweepersSlimDX.AI
             for (int chromoIndex = 0; chromoIndex < chromo.Count; ++chromoIndex)
             {
                 //do we perturb this weight?
-                if (Utils.RandomDouble() < mutationRate)
+                if (RandomNumbers.Double() < mutationRate)
                 {
                     //add or subtract a small value to the weight
-                    chromo[chromoIndex] += (Utils.RandomClamped() * Params.Instance.MaxPerturbation);
+                    chromo[chromoIndex] += (RandomNumbers.Clamped() * Params.Instance.MaxPerturbation);
                 }
             }
         }
@@ -229,7 +230,7 @@ namespace SmartSweepersSlimDX.AI
         private Genome GetChromoRoulette()
         {
             //generate a random number between 0 & total fitness count
-            double slice = (double)(Utils.RandomDouble() * totalFitness);
+            double slice = (double)(RandomNumbers.Double() * totalFitness);
 
             //go through the chromosones adding up the fitness so far
             double fitnessSoFar = 0;

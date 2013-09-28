@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using SlimDX;
 using SmartSweepersSlimDX.AI;
+using SmartSweepersSlimDX.AI.Utils;
 
 namespace SmartSweepersSlimDX
 {
@@ -51,7 +48,7 @@ namespace SmartSweepersSlimDX
         /// <summary>Initializes a new instance of the <see cref="Minesweeper" /> class.</summary>
         public Minesweeper()
         {
-            rotation = Utils.RandomDouble() * Math.PI * 2;
+            rotation = RandomNumbers.Double() * Math.PI * 2;
             lTrack = 0.16;
             rTrack = 0.16;
             fitness = 0;
@@ -62,8 +59,8 @@ namespace SmartSweepersSlimDX
 
             //create a random start position
             position = new Vector2(
-                (float)(Utils.RandomDouble() * Params.Instance.WindowWidth),
-                (float)(Utils.RandomDouble() * Params.Instance.WindowHeight));
+                (float)(RandomNumbers.Double() * Params.Instance.WindowWidth),
+                (float)(RandomNumbers.Double() * Params.Instance.WindowHeight));
         }
 
         /// <summary>
@@ -115,7 +112,7 @@ namespace SmartSweepersSlimDX
             double rottatingForce = lTrack - rTrack;
 
             //clamp rotation
-            Utils.Clamp(ref rottatingForce, -Params.Instance.MaxTurnRate, Params.Instance.MaxTurnRate);
+            rottatingForce.Clamp(-Params.Instance.MaxTurnRate, Params.Instance.MaxTurnRate);
 
             rotation += rottatingForce;
 
@@ -205,14 +202,14 @@ namespace SmartSweepersSlimDX
         {
             //reset the sweepers positions
             position = new Vector2(
-                (float)(Utils.RandomDouble() * Params.Instance.WindowWidth),
-                (float)(Utils.RandomDouble() * Params.Instance.WindowHeight));
+                (float)(RandomNumbers.Double() * Params.Instance.WindowWidth),
+                (float)(RandomNumbers.Double() * Params.Instance.WindowHeight));
 
             //and the fitness
             fitness = 0;
 
             //and the rotation
-            rotation = Utils.RandomDouble() * Math.PI * 2;
+            rotation = RandomNumbers.Double() * Math.PI * 2;
 
             return;
         }

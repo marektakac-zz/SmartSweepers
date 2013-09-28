@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using SlimDX.DXGI;
 using SlimDX.Windows;
+using SmartSweepersSlimDX.AI.Utils;
 using SmartSweepersSlimDX.Rendering;
 
 namespace SmartSweepersSlimDX
@@ -224,13 +224,13 @@ namespace SmartSweepersSlimDX
                 int direction = e.KeyCode == Keys.Right ? 1 : -1;
                 float power = 30;
 
-                double r = brushColor.Red + (float)Utils.RandomDouble() / power * direction;
-                double g = brushColor.Green + (float)Utils.RandomDouble() / power * direction;
-                double b = brushColor.Blue + (float)Utils.RandomDouble() / power * direction;
+                double r = brushColor.Red + (float)RandomNumbers.Double() / power * direction;
+                double g = brushColor.Green + (float)RandomNumbers.Double() / power * direction;
+                double b = brushColor.Blue + (float)RandomNumbers.Double() / power * direction;
 
-                Utils.Clamp(ref r, 0, 1);
-                Utils.Clamp(ref g, 0, 1);
-                Utils.Clamp(ref b, 0, 1);
+                r.Clamp(0, 1);
+                g.Clamp(0, 1);
+                b.Clamp(0, 1);
 
                 brushColor = new SlimDX.Color4((float)r, (float)g, (float)b);
 

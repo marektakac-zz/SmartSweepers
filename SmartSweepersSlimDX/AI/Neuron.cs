@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SmartSweepersSlimDX.AI.Utils;
 
 namespace SmartSweepersSlimDX.AI
 {
@@ -42,7 +43,7 @@ namespace SmartSweepersSlimDX.AI
             for (int i = 0; i < this.InputCount; ++i)
             {
                 //set up the weights with an initial random value
-                weights.Add(Utils.RandomClamped());
+                weights.Add(RandomNumbers.Clamped());
             }
         }
     }
