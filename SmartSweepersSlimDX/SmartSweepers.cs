@@ -66,7 +66,7 @@ namespace SmartSweepersSlimDX
 
             form.KeyDown += HandleKeyDown;
             form.KeyUp += HandleKeyUp;
-            form.Closed += (o, args) => { isFormClosed = true; };
+            form.Closed += (o, args) => { isFormClosed = true; TerminateFastUpdate(); };
             form.Resize += (o, args) =>
             {
                 if (form.WindowState != currentFormWindowState)
@@ -186,9 +186,14 @@ namespace SmartSweepersSlimDX
         protected void Quit()
         {
             form.Close();
+            TerminateFastUpdate();
+        }
 
+        private void TerminateFastUpdate()
+        {
             if (fastUpdate != null && fastUpdate.ThreadState != System.Threading.ThreadState.Stopped)
             {
+                Debug.WriteLine("Terminating fast-update thread.");
                 fastUpdate.Abort();
             }
         }
