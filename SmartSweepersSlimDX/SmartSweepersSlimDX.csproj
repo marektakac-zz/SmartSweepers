@@ -43,6 +43,7 @@
   <ItemGroup>
     <Reference Include="SlimDX, Version=4.0.13.43, Culture=neutral" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />

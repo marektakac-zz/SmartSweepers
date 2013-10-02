@@ -1,21 +1,22 @@
 ﻿using System;
+using System.Configuration;
 
 namespace SmartSweepersSlimDX
 {
     /// <summary>
     /// 
     /// </summary>
-    class Params
+    internal class Params
     {
         #region General parameters
 
         /// <summary>Gets the width of the window.</summary>
         /// <value>The width of the window.</value>
-        public int WindowWidth { get; private set; }
+        public int WindowWidth { get { return GetInt("WindowWidth"); } }
 
         /// <summary>Gets the height of the window.</summary>
         /// <value>The height of the window.</value>
-        public int WindowHeight { get; private set; }
+        public int WindowHeight { get { return GetInt("WindowHeight"); } }
 
         #endregion
 
@@ -23,27 +24,27 @@ namespace SmartSweepersSlimDX
 
         /// <summary>Gets the num inputs.</summary>
         /// <value>The num inputs.</value>
-        public int InputCount { get; private set; }
+        public int InputCount { get { return GetInt("InputCount"); } }
 
         /// <summary>Gets the num hidden.</summary>
         /// <value>The num hidden.</value>
-        public int HiddenLayerCount { get; private set; }
+        public int HiddenLayerCount { get { return GetInt("HiddenLayerCount"); } }
 
         /// <summary>Gets the neurons per hidden layer.</summary>
         /// <value>The neurons per hidden layer.</value>
-        public int NeuronsPerHiddenLayer { get; private set; }
+        public int NeuronsPerHiddenLayer { get { return GetInt("NeuronsPerHiddenLayer"); } }
 
         /// <summary>Gets the num outputs.</summary>
         /// <value>The num outputs.</value>
-        public int OutputCount { get; private set; }
+        public int OutputCount { get { return GetInt("OutputCount"); } }
 
         /// <summary>Gets the activation response used for tweeking the sigmoid function.</summary>
         /// <value>The activation response.</value>
-        public double ActivationResponse { get; private set; }
+        public double ActivationResponse { get { return GetDouble("ActivationResponse"); } }
 
         /// <summary>Gets the bias.</summary>
         /// <value>The bias.</value>
-        public double Bias { get; private set; }
+        public double Bias { get { return GetDouble("Bias"); } }
 
         #endregion
 
@@ -51,11 +52,11 @@ namespace SmartSweepersSlimDX
 
         /// <summary>Gets the max turn rate.</summary>
         /// <value>The max turn rate.</value>
-        public double MaxTurnRate { get; private set; }
+        public double MaxTurnRate { get { return GetDouble("MaxTurnRate"); } }
 
         /// <summary>Gets the sweeper scale.</summary>
         /// <value>The sweeper scale.</value>
-        public int SweeperScale { get; private set; }
+        public int SweeperScale { get { return GetInt("SweeperScale"); } }
 
         #endregion
 
@@ -63,19 +64,19 @@ namespace SmartSweepersSlimDX
 
         /// <summary>Gets the num sweepers.</summary>
         /// <value>The num sweepers.</value>
-        public int NumSweepers { get; private set; }
+        public int NumSweepers { get { return GetInt("NumSweepers"); } }
 
         /// <summary>Gets the num mines.</summary>
         /// <value>The num mines.</value>
-        public int NumMines { get; private set; }
+        public int NumMines { get { return GetInt("NumMines"); } }
 
         /// <summary>Gets the num ticks.</summary>
         /// <value>The num ticks.</value>
-        public int NumTicks { get; private set; }
+        public int NumTicks { get { return GetInt("NumTicks"); } }
 
         /// <summary>Gets the mine scale.</summary>
         /// <value>The mine scale.</value>
-        public double MineScale { get; private set; }
+        public double MineScale { get { return GetDouble("MineScale"); } }
 
         #endregion
 
@@ -83,23 +84,23 @@ namespace SmartSweepersSlimDX
 
         /// <summary>Gets the crossover rate.</summary>
         /// <value>The crossover rate.</value>
-        public double CrossoverRate { get; private set; }
+        public double CrossoverRate { get { return GetDouble("CrossoverRate"); } }
 
         /// <summary>Gets the mutation rate.</summary>
         /// <value>The mutation rate.</value>
-        public double MutationRate { get; private set; }
+        public double MutationRate { get { return GetDouble("MutationRate"); } }
 
         /// <summary>Gets the max perturbation.</summary>
         /// <value>The max perturbation.</value>
-        public double MaxPerturbation { get; private set; }
+        public double MaxPerturbation { get { return GetDouble("MaxPerturbation"); } }
 
         /// <summary>Gets the num elite.</summary>
         /// <value>The num elite.</value>
-        public int NumElite { get; private set; }
+        public int NumElite { get { return GetInt("NumElite"); } }
 
         /// <summary>Gets the num copies elite.</summary>
         /// <value>The num copies elite.</value>
-        public int NumCopiesElite { get; private set; }
+        public int NumCopiesElite { get { return GetInt("NumCopiesElite"); } }
 
         #endregion
 
@@ -118,33 +119,24 @@ namespace SmartSweepersSlimDX
             }
         }
 
-        /// <summary>Initializes a new instance of the <see cref="Params" /> class.</summary>
-        private Params()
+        /// <summary>Gets an int value from the configuration file specified by the name.</summary>
+        /// <param name="name">The name of the configuration value.</param>
+        /// <returns></returns>
+        private int GetInt(string name)
         {
-            WindowWidth = 800;
-            WindowHeight = 600;
+            int value = 0;
+            Int32.TryParse(ConfigurationManager.AppSettings[name], out value);
+            return value; // parsed value or 0 if any problem occurred
+        }
 
-            //LoadInParameters("params.ini");
-
-            InputCount = 4;
-            HiddenLayerCount = 1;
-            NeuronsPerHiddenLayer = 8;
-            OutputCount = 2;
-            ActivationResponse = 1;
-            Bias = -1;
-            MaxTurnRate = 0.3;
-
-            SweeperScale = 5;
-            MineScale = 2;
-            
-            NumMines = 50;
-            NumSweepers = 30;
-            NumTicks = 4000;
-            CrossoverRate = 0.7;
-            MutationRate = 0.1;
-            MaxPerturbation = 0.3;
-            NumElite = 4;
-            NumCopiesElite = 1;
+        /// <summary>Gets a double value from the configuration file specified by the name.</summary>
+        /// <param name="name">The name of the configuration value.</param>
+        /// <returns></returns>
+        private double GetDouble(string name)
+        {
+            double value = 0;
+            Double.TryParse(ConfigurationManager.AppSettings[name], out value);
+            return value; // parsed value or 0 if any problem occurred
         }
     }
 }
