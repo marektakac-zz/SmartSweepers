@@ -5,12 +5,17 @@ namespace SmartSweepersSlimDX.AI
 {
     class NeuralNet
     {
+        #region Private Variables
+
+        private List<NeuronLayer> layers;
         private int inputCount;
         private int outputCount;
         private int hiddenLayerCount;
         private int neuronsPerHiddenLayer;
 
-        List<NeuronLayer> layers;
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NeuralNet" /> class.
@@ -27,29 +32,9 @@ namespace SmartSweepersSlimDX.AI
             CreateNet();
         }
 
-        /// <summary>Builds the ANN. The weights are all initially set to random values -1 < w < 1.</summary>
-        private void CreateNet()
-        {
-            //create the layers of the network
-            if (hiddenLayerCount > 0)
-            {
-                //create first hidden layer
-                layers.Add(new NeuronLayer(neuronsPerHiddenLayer, inputCount));
+        #endregion
 
-                for (int index = 0; index < hiddenLayerCount - 1; ++index)
-                {
-                    layers.Add(new NeuronLayer(neuronsPerHiddenLayer, neuronsPerHiddenLayer));
-                }
-
-                //create output layer
-                layers.Add(new NeuronLayer(outputCount, neuronsPerHiddenLayer));
-            }
-            else
-            {
-                //create output layer
-                layers.Add(new NeuronLayer(outputCount, inputCount));
-            }
-        }
+        #region Public Methods
 
         /// <summary>
         /// Gets the weights from the NN.
@@ -81,7 +66,7 @@ namespace SmartSweepersSlimDX.AI
         /// Gets total number of weights in net.
         /// </summary>
         /// <returns></returns>
-        public int NumberOfWeights()
+        public int GetNumberOfWeights()
         {
             int weights = 0;
 
@@ -198,5 +183,35 @@ namespace SmartSweepersSlimDX.AI
         {
             return (1 / (1 + Math.Exp(-activation / response)));
         }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>Builds the ANN. The weights are all initially set to random values -1 < w < 1.</summary>
+        private void CreateNet()
+        {
+            //create the layers of the network
+            if (hiddenLayerCount > 0)
+            {
+                //create first hidden layer
+                layers.Add(new NeuronLayer(neuronsPerHiddenLayer, inputCount));
+
+                for (int index = 0; index < hiddenLayerCount - 1; ++index)
+                {
+                    layers.Add(new NeuronLayer(neuronsPerHiddenLayer, neuronsPerHiddenLayer));
+                }
+
+                //create output layer
+                layers.Add(new NeuronLayer(outputCount, neuronsPerHiddenLayer));
+            }
+            else
+            {
+                //create output layer
+                layers.Add(new NeuronLayer(outputCount, inputCount));
+            }
+        }
+
+        #endregion
     }
 }

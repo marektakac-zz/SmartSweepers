@@ -55,7 +55,7 @@ namespace SmartSweepersSlimDX
 
         /// <summary>Gets the number of weights.</summary>
         /// <value>The number of weights.</value>
-        public int NumberOfWeights { get { return brain.NumberOfWeights(); } }
+        public int NumberOfWeights { get { return brain.GetNumberOfWeights(); } }
 
         #endregion
 

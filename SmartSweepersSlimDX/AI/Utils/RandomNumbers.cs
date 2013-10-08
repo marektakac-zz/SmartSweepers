@@ -4,10 +4,16 @@ namespace SmartSweepersSlimDX.AI.Utils
 {
     internal static class RandomNumbers
     {
+        #region Private Variables
+
         /// <summary>
         /// The random instance.
         /// </summary>
         private static Random random = new Random((int)DateTime.Now.Ticks & 0x0000FFFF);
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Returns a random integer between x and y.
@@ -41,5 +47,7 @@ namespace SmartSweepersSlimDX.AI.Utils
         {
             return random.NextDouble() - random.NextDouble();
         }
+
+        #endregion
     }
 }

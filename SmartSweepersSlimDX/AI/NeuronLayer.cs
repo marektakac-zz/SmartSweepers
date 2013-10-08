@@ -4,11 +4,18 @@ namespace SmartSweepersSlimDX.AI
 {
     class NeuronLayer
     {
-        //the number of neurons in this layer
-        public int NeuronCount { get; private set; }
+        #region Private Variables
 
-        //the layer of neurons
+        /// <summary>The layer of neurons</summary>
         private List<Neuron> neurons;
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>Gets the number of neurons in this layer.</summary>
+        /// <value>The neuron count.</value>
+        public int NeuronCount { get; private set; }
 
         /// <summary>Gets the neurons.</summary>
         /// <value>The neurons.</value>
@@ -18,10 +25,11 @@ namespace SmartSweepersSlimDX.AI
         /// <value>The <see cref="Neuron" />.</value>
         /// <param name="index">The index.</param>
         /// <returns></returns>
-        public Neuron this[int index]
-        {
-            get { return neurons[index]; }
-        }
+        public Neuron this[int index] { get { return neurons[index]; } }
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NeuronLayer" /> class and 
@@ -40,5 +48,7 @@ namespace SmartSweepersSlimDX.AI
                 neurons.Add(new Neuron(inputCountPerNeuron));
             }
         }
+
+        #endregion
     }
 }

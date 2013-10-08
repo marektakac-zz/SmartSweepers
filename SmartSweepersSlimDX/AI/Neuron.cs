@@ -5,15 +5,21 @@ namespace SmartSweepersSlimDX.AI
 {
     class Neuron
     {
-        /// <summary>
-        /// The number of inputs into the neuron.
-        /// </summary>
-        public int InputCount { get; private set; }
+        #region Private Variables
 
         /// <summary>
         /// The weights for each input.
         /// </summary>
         private List<double> weights;
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// The number of inputs into the neuron.
+        /// </summary>
+        public int InputCount { get; private set; }
 
         /// <summary>Gets the weights.</summary>
         /// <value>The weights.</value>
@@ -28,6 +34,10 @@ namespace SmartSweepersSlimDX.AI
             get { return weights[index]; }
             set { weights[index] = value; }
         }
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Neuron" /> class.
@@ -46,5 +56,7 @@ namespace SmartSweepersSlimDX.AI
                 weights.Add(RandomNumbers.Clamped());
             }
         }
+
+        #endregion
     }
 }
