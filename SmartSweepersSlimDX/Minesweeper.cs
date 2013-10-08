@@ -43,6 +43,22 @@ namespace SmartSweepersSlimDX
 
         #endregion
 
+        #region Public Properties
+
+        /// <summary>Gets the position in the world.</summary>
+        /// <value>The position.</value>
+        public Vector2 Position { get { return position; } }
+
+        /// <summary>The Fitness of this instance.</summary>
+        /// <value>The fitness.</value>
+        public double Fitness { get { return fitness; } }
+
+        /// <summary>Gets the number of weights.</summary>
+        /// <value>The number of weights.</value>
+        public int NumberOfWeights { get { return brain.NumberOfWeights(); } }
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>Initializes a new instance of the <see cref="Minesweeper" /> class.</summary>
@@ -145,20 +161,9 @@ namespace SmartSweepersSlimDX
             matTransform.TransformPoints(sweeper);
         }
 
-        private double RadToDeg(double angle)
-        {
-            return angle * (180 / Math.PI);
-        }
-
-        private double DegToRad(double angle)
-        {
-            return Math.PI * angle / 180;
-        }
-
         /// <summary>Returns a vector to the closest mine.</summary>
         /// <param name="mines">Mines.</param>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
         public Vector2 GetClosestMine(List<Vector2> mines)
         {
             double closestSoFar = 99999;
@@ -214,28 +219,10 @@ namespace SmartSweepersSlimDX
             return;
         }
 
-        #endregion
-
-        #region Accessor functions
-
-        /// <summary>Positions this instance.</summary>
-        /// <returns></returns>
-        public Vector2 Position()
-        {
-            return position;
-        }
-
         /// <summary>Increments the fitness.</summary>
         public void IncrementFitness()
         {
             ++fitness;
-        }
-
-        /// <summary>Fitnesses this instance.</summary>
-        /// <returns></returns>
-        public double Fitness()
-        {
-            return fitness;
         }
 
         /// <summary>Puts the weights.</summary>
@@ -245,11 +232,24 @@ namespace SmartSweepersSlimDX
             brain.PutWeights(w);
         }
 
-        /// <summary>Gets the number of weights.</summary>
+        #endregion
+
+        #region Private Helper Methods
+
+        /// <summary>RADs the automatic deg.</summary>
+        /// <param name="angle">The angle.</param>
         /// <returns></returns>
-        public int GetNumberOfWeights()
+        private double RadToDeg(double angle)
         {
-            return brain.GetNumberOfWeights();
+            return angle * (180 / Math.PI);
+        }
+
+        /// <summary>Degs the automatic RAD.</summary>
+        /// <param name="angle">The angle.</param>
+        /// <returns></returns>
+        private double DegToRad(double angle)
+        {
+            return Math.PI * angle / 180;
         }
 
         #endregion

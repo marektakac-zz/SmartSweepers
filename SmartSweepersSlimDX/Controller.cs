@@ -136,7 +136,7 @@ namespace SmartSweepersSlimDX
             }
 
             //get the total number of weights used in the sweepers NN so we can initialise the GA
-            weightsInNN = sweepers[0].GetNumberOfWeights();
+            weightsInNN = sweepers[0].NumberOfWeights;
 
             //initialize the Genetic Algorithm class
             geneticAlgorithm = new GeneticAlgorithm(sweepersCount, Params.Instance.MutationRate, Params.Instance.CrossoverRate, weightsInNN);
@@ -187,9 +187,9 @@ namespace SmartSweepersSlimDX
             int i = 0;
 
             string stats = string.Format("Generation: {0}\nBest Fitness: {1}\nAverage Fitness: {2:0.00}\nCycles: {3}",
-                generations, 
-                geneticAlgorithm.BestFitness(), 
-                geneticAlgorithm.AverageFitness(), 
+                generations,
+                geneticAlgorithm.BestFitness(),
+                geneticAlgorithm.AverageFitness(),
                 ticks);
 
             using (var factory = new SlimDX.DirectWrite.Factory())
@@ -240,8 +240,8 @@ namespace SmartSweepersSlimDX
                     if (i == 0)
                     {
                         var msg = string.Format("[{0:0.0} , {1:0.0}] {2:0.0} {3:0.0} [{4:0.0} , {5:0.0}]",
-                            sweepers[i].Position().X,
-                            sweepers[i].Position().Y,
+                            sweepers[i].Position.X,
+                            sweepers[i].Position.Y,
                             sweepers[i].speed,
                             sweepers[i].rotation,
                             sweepers[i].lookAt.X,
@@ -367,7 +367,7 @@ namespace SmartSweepersSlimDX
                     }
 
                     //update the chromos fitness score
-                    population[i].Fitness = sweepers[i].Fitness();
+                    population[i].Fitness = sweepers[i].Fitness;
                 }
             }
             else

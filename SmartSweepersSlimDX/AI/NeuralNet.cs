@@ -81,7 +81,7 @@ namespace SmartSweepersSlimDX.AI
         /// Gets total number of weights in net.
         /// </summary>
         /// <returns></returns>
-        public int GetNumberOfWeights()
+        public int NumberOfWeights()
         {
             int weights = 0;
 
