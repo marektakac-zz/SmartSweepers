@@ -7,6 +7,8 @@ namespace SmartSweepersSlimDX.Rendering
     /// </summary>
     class DeviceSettings2D
     {
+        #region Public Properties
+
         /// <summary>
         /// Gets or sets the width of the renderable area.
         /// </summary>
@@ -16,5 +18,7 @@ namespace SmartSweepersSlimDX.Rendering
         /// Gets or sets the height of the renderable area.
         /// </summary>
         public int Height { get; set; }
+
+        #endregion
     }
 }
