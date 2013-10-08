@@ -13,7 +13,13 @@ namespace SmartSweepersSlimDX
     /// </summary>
     internal class SmartSweepers : IDisposable
     {
+        #region Private Constants
+
         private const string TITLE = "Smart Sweepers";
+
+        #endregion
+
+        #region Private Variables
 
         private bool disposed = false;
         private IDisposable apiContext;
@@ -22,29 +28,34 @@ namespace SmartSweepersSlimDX
         private bool isFullScreen = false;
         private System.Threading.Thread fastUpdate;
 
+        #endregion
+
+        #region Protected Variables
+
         protected Controller controller;
         protected SlimDX.Color4 brushColor = new SlimDX.Color4(0.93f, 0.40f, 0.08f);
 
-        /// <summary>
-        /// Gets the width of the renderable area of the window.
-        /// </summary>
-        public int WindowWidth
-        {
-            get { return Params.Instance.WindowWidth; }
-        }
+        #endregion
 
-        /// <summary>
-        /// Gets the height of the renderable area of the window.
-        /// </summary>
-        public int WindowHeight
-        {
-            get { return Params.Instance.WindowHeight; }
-        }
+        #region Public Properties
+
+        /// <summary>Gets the width of the renderable area of the window.</summary>
+        /// <value>The width of the window.</value>
+        public int WindowWidth        {            get { return Params.Instance.WindowWidth; }        }
+
+        /// <summary>Gets the height of the renderable area of the window.</summary>
+        /// <value>The height of the window.</value>
+        public int WindowHeight        {            get { return Params.Instance.WindowHeight; }        }
 
         /// <summary>
         /// Represents a Direct2D Context, only valid after calling InitializeDevice(DeviceSettings2D)
         /// </summary>
+        /// <value>The context2 command.</value>
         public DeviceContext2D Context2D { get; private set; }
+
+        #endregion
+
+        #region Constructor / Destructor
 
         /// <summary>
         /// Performs object finalization.
@@ -53,6 +64,10 @@ namespace SmartSweepersSlimDX
         {
             Dispose(false);
         }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>Runs this instance.</summary>
         public void Run()
@@ -107,6 +122,10 @@ namespace SmartSweepersSlimDX
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
+
+        #region Protected Methods
 
         /// <summary>
         /// Disposes of object resources.
@@ -188,6 +207,10 @@ namespace SmartSweepersSlimDX
             form.Close();
             TerminateFastUpdate();
         }
+
+        #endregion
+
+        #region Private Methods
 
         private void TerminateFastUpdate()
         {
@@ -282,5 +305,7 @@ namespace SmartSweepersSlimDX
                 return;
             }
         }
+
+        #endregion
     }
 }

@@ -5,6 +5,8 @@ namespace SmartSweepersSlimDX
 {
     internal class SmartSweepers2D : SmartSweepers
     {
+        #region Protected Override Methods
+
         /// <summary>Disposes of object resources.</summary>
         /// <param name="disposeManagedResources">If true, managed resources should be
         /// disposed of in addition to unmanaged resources.</param>
@@ -59,5 +61,7 @@ namespace SmartSweepersSlimDX
         {
             Context2D.RenderTarget.EndDraw();
         }
+
+        #endregion
     }
 }
