@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartSweepersSlimDX.AI
 {
@@ -16,7 +17,7 @@ namespace SmartSweepersSlimDX.AI
         /// <summary>Gets the number of neurons in this layer.</summary>
         /// <value>The neuron count.</value>
         public int NeuronCount { get; private set; }
-
+        
         /// <summary>Gets the neurons.</summary>
         /// <value>The neurons.</value>
         public IEnumerable<Neuron> Neurons { get { return neurons; } }
@@ -47,6 +48,19 @@ namespace SmartSweepersSlimDX.AI
             {
                 neurons.Add(new Neuron(inputCountPerNeuron));
             }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>Gets the number of weights.</summary>
+        /// <returns></returns>
+        public int GetNumberOfWeights()
+        {
+            return neurons
+                .Select(neuron => neuron.InputCount)
+                .Sum();
         }
 
         #endregion

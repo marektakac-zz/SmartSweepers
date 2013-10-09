@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SmartSweepersSlimDX.AI
 {
@@ -37,56 +38,15 @@ namespace SmartSweepersSlimDX.AI
         #region Public Methods
 
         /// <summary>
-        /// Gets the weights from the NN.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<double> GetWeights()
-        {
-            //this will hold the weights
-            List<double> weights = new List<double>();
-
-            //for each layer
-            for (int layerIndex = 0; layerIndex < hiddenLayerCount + 1; ++layerIndex)
-            {
-                //for each neuron
-                for (int neuronIndex = 0; neuronIndex < layers[layerIndex].NeuronCount; ++neuronIndex)
-                {
-                    //for each weight
-                    for (int weightIndex = 0; weightIndex < layers[layerIndex][neuronIndex].InputCount; ++weightIndex)
-                    {
-                        weights.Add(layers[layerIndex][neuronIndex][weightIndex]);
-                    }
-                }
-            }
-
-            return weights;
-        }
-
-        /// <summary>
         /// Gets total number of weights in net.
         /// </summary>
         /// <returns></returns>
         public int GetNumberOfWeights()
         {
-            int weights = 0;
-
-            //for each layer
-            for (int layerIndex = 0; layerIndex < hiddenLayerCount + 1; ++layerIndex)
-            {
-                //for each neuron
-                for (int neuronIndex = 0; neuronIndex < layers[layerIndex].NeuronCount; ++neuronIndex)
-                {
-                    //for each weight
-                    for (int weightIndex = 0; weightIndex < layers[layerIndex][neuronIndex].InputCount; ++weightIndex)
-                    {
-                        weights++;
-                    }
-                }
-            }
-
-            return weights;
+            return layers
+                .Select(layer => layer.GetNumberOfWeights())
+                .Sum();
         }
-
 
         /// <summary>
         /// Replaces the weights with new ones.
@@ -94,18 +54,15 @@ namespace SmartSweepersSlimDX.AI
         /// <param name="weights">The weights.</param>
         public void PutWeights(IList<double> weights)
         {
-            int weight = 0;
+            int weightIndex = 0;
 
-            //for each layer
-            for (int layerIndex = 0; layerIndex < hiddenLayerCount + 1; ++layerIndex)
+            foreach (var layer in layers)
             {
-                //for each neuron
-                for (int neuronIndex = 0; neuronIndex < layers[layerIndex].NeuronCount; ++neuronIndex)
+                foreach (var neuron in layer.Neurons)
                 {
-                    //for each weight
-                    for (int weightIndex = 0; weightIndex < layers[layerIndex][neuronIndex].InputCount; ++weightIndex)
+                    for (int index = 0; index < neuron.InputCount; ++index)
                     {
-                        layers[layerIndex][neuronIndex][weightIndex] = weights[weight++];
+                        neuron[index] = weights[weightIndex++];
                     }
                 }
             }
@@ -120,47 +77,39 @@ namespace SmartSweepersSlimDX.AI
         /// <returns></returns>
         public List<double> Update(List<double> inputs)
         {
-            //stores the resultant outputs from each layer
+            int weight = 0;
             List<double> outputs = new List<double>();
 
-            int weight = 0;
-
-            //first check that we have the correct amount of inputs
             if (inputs.Count != inputCount)
             {
-                //just return an empty vector if incorrect.
+                //first check that we have the correct amount of inputs and just return an empty vector if incorrect.
                 return outputs;
             }
 
-            //For each layer....
-            for (int layerIndex = 0; layerIndex < hiddenLayerCount + 1; ++layerIndex)
+            foreach (var layer in layers)
             {
-                if (layerIndex > 0)
+                if (layers.IndexOf(layer) > 0)
                 {
                     inputs = new List<double>(outputs);
                 }
 
                 outputs.Clear();
-
                 weight = 0;
 
                 //for each neuron sum the (inputs * corresponding weights).Throw 
                 //the total at our sigmoid function to get the output.
-                for (int neuronIndex = 0; neuronIndex < layers[layerIndex].NeuronCount; ++neuronIndex)
+                foreach (var neuron in layer.Neurons)
                 {
                     double netInput = 0;
 
-                    int numInputs = layers[layerIndex][neuronIndex].InputCount;
-
-                    //for each weight
-                    for (int weightIndex = 0; weightIndex < numInputs - 1; ++weightIndex)
+                    for (int weightIndex = 0; weightIndex < neuron.InputCount - 1; ++weightIndex)
                     {
-                        //sum the weights x inputs
-                        netInput += layers[layerIndex][neuronIndex][weightIndex] * inputs[weight++];
+                        //sum the weights with inputs
+                        netInput += neuron[weightIndex] * inputs[weight++];
                     }
 
                     //add in the bias
-                    netInput += layers[layerIndex][neuronIndex][numInputs - 1] * Params.Instance.Bias;
+                    netInput += neuron[neuron.InputCount - 1] * Params.Instance.Bias;
 
                     //we can store the outputs from each layer as we generate them. 
                     //The combined activation is first filtered through the sigmoid function
@@ -171,17 +120,6 @@ namespace SmartSweepersSlimDX.AI
             }
 
             return outputs;
-        }
-
-        /// <summary>
-        /// Sigmoid response curve.
-        /// </summary>
-        /// <param name="activation">The activation.</param>
-        /// <param name="response">The response.</param>
-        /// <returns></returns>
-        public double Sigmoid(double activation, double response)
-        {
-            return (1 / (1 + Math.Exp(-activation / response)));
         }
 
         #endregion
@@ -210,6 +148,17 @@ namespace SmartSweepersSlimDX.AI
                 //create output layer
                 layers.Add(new NeuronLayer(outputCount, inputCount));
             }
+        }
+
+        /// <summary>
+        /// Sigmoid response curve.
+        /// </summary>
+        /// <param name="activation">The activation.</param>
+        /// <param name="response">The response.</param>
+        /// <returns></returns>
+        private double Sigmoid(double activation, double response)
+        {
+            return (1 / (1 + Math.Exp(-activation / response)));
         }
 
         #endregion
