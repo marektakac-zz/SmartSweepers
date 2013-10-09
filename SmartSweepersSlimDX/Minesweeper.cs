@@ -128,9 +128,7 @@ namespace SmartSweepersSlimDX
             double rottatingForce = lTrack - rTrack;
 
             //clamp rotation
-            rottatingForce.Clamp(-Params.Instance.MaxTurnRate, Params.Instance.MaxTurnRate);
-
-            rotation += rottatingForce;
+            rotation += rottatingForce.Clamp(-Params.Instance.MaxTurnRate, Params.Instance.MaxTurnRate);
 
             speed = (lTrack + rTrack);
 

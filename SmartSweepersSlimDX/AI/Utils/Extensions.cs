@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace SmartSweepersSlimDX.AI.Utils
 {
@@ -10,7 +12,7 @@ namespace SmartSweepersSlimDX.AI.Utils
         /// <param name="number">The arg.</param>
         /// <param name="min">The min.</param>
         /// <param name="max">The max.</param>
-        internal static void Clamp(this double number, double min, double max)
+        internal static double Clamp(this double number, double min, double max)
         {
             if (min > max)
             {
@@ -19,12 +21,14 @@ namespace SmartSweepersSlimDX.AI.Utils
 
             if (number < min)
             {
-                number = min;
+                return min;
             }
             else if (number > max)
             {
-                number = max;
+                return max;
             }
+
+            return number;
         }
     }
 }

@@ -251,11 +251,7 @@ namespace SmartSweepersSlimDX
                 double g = brushColor.Green + (float)RandomNumbers.Double() / power * direction;
                 double b = brushColor.Blue + (float)RandomNumbers.Double() / power * direction;
 
-                r.Clamp(0, 1);
-                g.Clamp(0, 1);
-                b.Clamp(0, 1);
-
-                brushColor = new SlimDX.Color4((float)r, (float)g, (float)b);
+                brushColor = new SlimDX.Color4((float)r.Clamp(0, 1), (float)g.Clamp(0, 1), (float)b.Clamp(0, 1));
 
                 Debug.WriteLine(string.Format("New color: {0,6:N2} {1,4:N2} {2,4:N2}", brushColor.Red, brushColor.Green, brushColor.Blue));
             }

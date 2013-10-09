@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Globalization;
 
 namespace SmartSweepersSlimDX
 {
@@ -135,7 +136,13 @@ namespace SmartSweepersSlimDX
         private double GetDouble(string name)
         {
             double value = 0;
-            Double.TryParse(ConfigurationManager.AppSettings[name], out value);
+            
+            Double.TryParse(
+                ConfigurationManager.AppSettings[name], 
+                NumberStyles.Number | NumberStyles.AllowDecimalPoint, 
+                CultureInfo.CreateSpecificCulture("en-US"), 
+                out value);
+
             return value; // parsed value or 0 if any problem occurred
         }
     }
