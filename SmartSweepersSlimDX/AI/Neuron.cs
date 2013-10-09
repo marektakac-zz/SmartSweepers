@@ -25,9 +25,11 @@ namespace SmartSweepersSlimDX.AI
         /// <value>The weights.</value>
         public IEnumerable<double> Weights { get { return weights; } }
 
-        /// <summary>Gets the <see cref="System.Double" /> at the specified index.</summary>
-        /// <value>The <see cref="System.Double" />.</value>
-        /// <param name="index">The index.</param>
+        /// <summary>
+        /// Gets or sets the weight at the specified index.
+        /// </summary>
+        /// <value>The weight.</value>
+        /// <param name="index">The index of weight.</param>
         /// <returns></returns>
         public double this[int index]
         {
@@ -50,9 +52,9 @@ namespace SmartSweepersSlimDX.AI
 
             weights = new List<double>();
 
+            //set up the weights with an initial random value
             for (int i = 0; i < this.InputCount; ++i)
             {
-                //set up the weights with an initial random value
                 weights.Add(RandomNumbers.Clamped());
             }
         }

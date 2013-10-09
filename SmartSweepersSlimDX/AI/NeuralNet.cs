@@ -188,7 +188,7 @@ namespace SmartSweepersSlimDX.AI
 
         #region Private Methods
 
-        /// <summary>Builds the ANN. The weights are all initially set to random values -1 < w < 1.</summary>
+        /// <summary>Builds the ANN. The weights are all initially set to random values -1 &lt; w &lt; 1.</summary>
         private void CreateNet()
         {
             //create the layers of the network
