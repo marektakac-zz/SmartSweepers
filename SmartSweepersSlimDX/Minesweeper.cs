@@ -71,7 +71,11 @@ namespace SmartSweepersSlimDX
             scale = Params.Instance.SweeperScale;
             closestMine = 0;
 
-            brain = new NeuralNet();
+            brain = new NeuralNet(
+                Params.Instance.InputCount, 
+                Params.Instance.OutputCount, 
+                Params.Instance.HiddenLayerCount, 
+                Params.Instance.NeuronsPerHiddenLayer);
 
             //create a random start position
             position = new Vector2(

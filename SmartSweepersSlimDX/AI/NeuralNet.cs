@@ -10,9 +10,7 @@ namespace SmartSweepersSlimDX.AI
 
         private List<NeuronLayer> layers;
         private int inputCount;
-        private int outputCount;
-        private int hiddenLayerCount;
-        private int neuronsPerHiddenLayer;
+        private int weightCount;
 
         #endregion
 
@@ -21,16 +19,34 @@ namespace SmartSweepersSlimDX.AI
         /// <summary>
         /// Initializes a new instance of the <see cref="NeuralNet" /> class.
         /// </summary>
-        public NeuralNet()
+        public NeuralNet(int inputCount, int outputCount, int hiddenLayerCount, int neuronsPerHiddenLayer)
         {
-            inputCount = Params.Instance.InputCount;
-            outputCount = Params.Instance.OutputCount;
-            hiddenLayerCount = Params.Instance.HiddenLayerCount;
-            neuronsPerHiddenLayer = Params.Instance.NeuronsPerHiddenLayer;
+            this.inputCount = inputCount;
 
             layers = new List<NeuronLayer>();
 
-            CreateNet();
+            //create the layers of the network
+            if (hiddenLayerCount > 0)
+            {
+                //create first hidden layer
+                layers.Add(new NeuronLayer(neuronsPerHiddenLayer, inputCount));
+
+                //create hidden layers
+                for (int index = 0; index < hiddenLayerCount - 1; ++index)
+                {
+                    layers.Add(new NeuronLayer(neuronsPerHiddenLayer, neuronsPerHiddenLayer));
+                }
+
+                //create output layer
+                layers.Add(new NeuronLayer(outputCount, neuronsPerHiddenLayer));
+            }
+            else
+            {
+                //create output layer
+                layers.Add(new NeuronLayer(outputCount, inputCount));
+            }
+
+            this.weightCount = GetNumberOfWeights();
         }
 
         #endregion
@@ -48,12 +64,17 @@ namespace SmartSweepersSlimDX.AI
                 .Sum();
         }
 
-        /// <summary>
-        /// Replaces the weights with new ones.
-        /// </summary>
+        /// <summary>Replaces the weights with new ones.</summary>
         /// <param name="weights">The weights.</param>
+        /// <exception cref="System.ArgumentException">If the count of weights is different then expected, then this excpetion is thrown with some details.</exception>
         public void PutWeights(IList<double> weights)
         {
+            //first check that we have the correct amount of weights
+            if (weights.Count != weightCount)
+            {
+                throw new ArgumentException(string.Format("The count of weights should be {0} instead of {1}.", weightCount, weights.Count));
+            }
+
             int weightIndex = 0;
 
             foreach (var layer in layers)
@@ -125,30 +146,6 @@ namespace SmartSweepersSlimDX.AI
         #endregion
 
         #region Private Methods
-
-        /// <summary>Builds the ANN. The weights are all initially set to random values -1 &lt; w &lt; 1.</summary>
-        private void CreateNet()
-        {
-            //create the layers of the network
-            if (hiddenLayerCount > 0)
-            {
-                //create first hidden layer
-                layers.Add(new NeuronLayer(neuronsPerHiddenLayer, inputCount));
-
-                for (int index = 0; index < hiddenLayerCount - 1; ++index)
-                {
-                    layers.Add(new NeuronLayer(neuronsPerHiddenLayer, neuronsPerHiddenLayer));
-                }
-
-                //create output layer
-                layers.Add(new NeuronLayer(outputCount, neuronsPerHiddenLayer));
-            }
-            else
-            {
-                //create output layer
-                layers.Add(new NeuronLayer(outputCount, inputCount));
-            }
-        }
 
         /// <summary>
         /// Sigmoid response curve.
