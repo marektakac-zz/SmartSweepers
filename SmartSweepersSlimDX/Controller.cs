@@ -333,11 +333,12 @@ namespace SmartSweepersSlimDX
         /// <returns></returns>
         public bool Update()
         {
-            //run the sweepers through Params.Instance.iNumTicks amount of cycles. During
-            //this loop each sweepers NN is constantly updated with the appropriate
-            //information from its surroundings. The output from the NN is obtained
-            //and the sweeper is moved. If it encounters a mine its fitness is
-            //updated appropriately,
+            /* Run the sweepers through Params.Instance.iNumTicks amount of cycles. During this loop 
+             * each sweepers NN is constantly updated with the appropriate information from its surroundings. 
+             * The output from the NN is obtained and the sweeper is moved. 
+             * If it encounters a mine its fitness is updated appropriately.
+             */
+ 
             if (ticks++ < Params.Instance.NumTicks)
             {
                 for (int i = 0; i < sweepersCount; ++i)
@@ -372,8 +373,9 @@ namespace SmartSweepersSlimDX
             }
             else
             {
-                //Another generation has been completed.
-                //Time to run the GA and update the sweepers with their new NNs
+                /* Another generation has been completed. 
+                 * Time to run the GA and update the sweepers with their new NNs
+                 */ 
 
                 //update the stats to be used in our stat window
                 averageFitness.Add(geneticAlgorithm.AverageFitness());
@@ -395,8 +397,7 @@ namespace SmartSweepersSlimDX
                     Params.Instance.NumCopiesElite, 
                     Params.Instance.MaxPerturbation);
 
-                //insert the new (hopefully)improved brains back into the sweepers
-                //and reset their positions etc
+                //insert the new (hopefully)improved brains back into the sweepers and reset their positions etc
                 for (int i = 0; i < sweepersCount; ++i)
                 {
                     sweepers[i].PutWeights(population[i].Weights);
