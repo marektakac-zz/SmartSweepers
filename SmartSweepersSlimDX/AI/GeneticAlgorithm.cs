@@ -93,10 +93,15 @@ namespace SmartSweepersSlimDX.AI
 
         #region Public Methods
 
-        /// <summary>Takes a population of chromosones and runs the algorithm through one cycle.</summary>
-        /// <param name="oldPopulation">The old_pop.</param>
+        /// <summary>
+        /// Takes a population of chromosones and runs the algorithm through one cycle.
+        /// </summary>
+        /// <param name="oldPopulation">The old population.</param>
+        /// <param name="numElite">The number of elities.</param>
+        /// <param name="numCopiesElite">The number of copies of elities.</param>
+        /// <param name="maxPerturbation">The maximum perturbation.</param>
         /// <returns>New population of chromosones.</returns>
-        public List<Genome> Epoch(List<Genome> oldPopulation)
+        public List<Genome> Epoch(List<Genome> oldPopulation, int numElite, int numCopiesElite, double maxPerturbation)
         {
             //assign the given population to the classes population
             genomes = oldPopulation;
@@ -113,16 +118,14 @@ namespace SmartSweepersSlimDX.AI
             //create a temporary list to store new chromosones
             List<Genome> newPopulation = new List<Genome>();
 
-            //Now to add a little elitism we shall add in some copies of the
-            //fittest genomes. Make sure we add an EVEN number or the roulette
-            //wheel sampling will crash
-            if ((Params.Instance.NumCopiesElite * Params.Instance.NumElite % 2) == 0)
+            //now to add a little elitism we shall add in some copies of the fittest genomes. 
+            //make sure we add an EVEN number or the roulette wheel sampling will crash
+            if ((numElite * numCopiesElite % 2) == 0)
             {
-                GrabNBest(Params.Instance.NumElite, Params.Instance.NumCopiesElite, newPopulation);
+                GrabNBest(numElite, numCopiesElite, newPopulation);
             }
 
             //now we enter the GA loop
-
             //repeat until a new population is generated
             while (newPopulation.Count < populationSize)
             {
@@ -137,8 +140,8 @@ namespace SmartSweepersSlimDX.AI
                 Crossover(mum.Weights, dad.Weights, out baby1, out baby2);
 
                 //now we mutate
-                Mutate(baby1);
-                Mutate(baby2);
+                Mutate(baby1, maxPerturbation);
+                Mutate(baby2, maxPerturbation);
 
                 //now copy into vecNewPop population
                 newPopulation.Add(new Genome(baby1, 0));
@@ -208,10 +211,11 @@ namespace SmartSweepersSlimDX.AI
         }
 
         /// <summary>
-        /// Mutates the specified chromosome by perturbing its weights by an amount not greater than Params.MaxPerturbation.
+        /// Mutates the specified chromosome by perturbing its weights by an amount not greater than MaxPerturbation.
         /// </summary>
         /// <param name="chromo">The chromosome.</param>
-        private void Mutate(List<double> chromo)
+        /// <param name="maxPerturbation">The maximum perturbation.</param>
+        private void Mutate(List<double> chromo, double maxPerturbation)
         {
             //traverse the chromosome and mutate each weight dependent on the mutation rate
             for (int chromoIndex = 0; chromoIndex < chromo.Count; ++chromoIndex)
@@ -220,7 +224,7 @@ namespace SmartSweepersSlimDX.AI
                 if (RandomNumbers.Double() < mutationRate)
                 {
                     //add or subtract a small value to the weight
-                    chromo[chromoIndex] += (RandomNumbers.Clamped() * Params.Instance.MaxPerturbation);
+                    chromo[chromoIndex] += (RandomNumbers.Clamped() * maxPerturbation);
                 }
             }
         }

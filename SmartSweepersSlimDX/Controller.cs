@@ -389,7 +389,11 @@ namespace SmartSweepersSlimDX
                 ticks = 0;
 
                 //run the GA to create a new population
-                population = geneticAlgorithm.Epoch(population);
+                population = geneticAlgorithm.Epoch(
+                    population, 
+                    Params.Instance.NumElite, 
+                    Params.Instance.NumCopiesElite, 
+                    Params.Instance.MaxPerturbation);
 
                 //insert the new (hopefully)improved brains back into the sweepers
                 //and reset their positions etc
