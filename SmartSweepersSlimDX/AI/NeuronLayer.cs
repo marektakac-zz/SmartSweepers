@@ -14,10 +14,6 @@ namespace SmartSweepersSlimDX.AI
 
         #region Public Properties
 
-        /// <summary>Gets the number of neurons in this layer.</summary>
-        /// <value>The neuron count.</value>
-        public int NeuronCount { get; private set; }
-        
         /// <summary>Gets the neurons.</summary>
         /// <value>The neurons.</value>
         public IEnumerable<Neuron> Neurons { get { return neurons; } }
@@ -40,11 +36,9 @@ namespace SmartSweepersSlimDX.AI
         /// <param name="inputCountPerNeuron">The input count per neuron.</param>
         public NeuronLayer(int neuronCount, int inputCountPerNeuron)
         {
-            NeuronCount = neuronCount;
-
             neurons = new List<Neuron>();
 
-            for (int i = 0; i < NeuronCount; ++i)
+            for (int i = 0; i < neuronCount; ++i)
             {
                 neurons.Add(new Neuron(inputCountPerNeuron));
             }
